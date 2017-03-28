@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-
+apply plugin: 'com.novoda.bintray-release'
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.2"
@@ -29,4 +29,12 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:recyclerview-v7:24+'
+}
+publish {
+    userOrg = 'sw950729'//bintray.com用户名
+    groupId = 'com.angel'//jcenter上的路径
+    artifactId = 'SWPullRecyclerLayout'//项目名称
+    publishVersion = '1.0.0'//版本号
+    desc = 'Oh hi, this is a nice layout about refreshing and loading'//描述，不重要
+    website = 'https://github.com/sw950729/SWPullRecyclerLayout'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
 }

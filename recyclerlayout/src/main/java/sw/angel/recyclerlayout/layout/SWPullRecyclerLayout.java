@@ -19,7 +19,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     private NestedScrollingParentHelper helper = null;
     private boolean IsRefresh = true;
     private boolean IsLoad = true;
-    //滑动的总距离
+    //move total
     private int totalY = 0;
     private LinearLayout headerLayout = null;
     private MyRecyclerView myRecyclerView = null;
@@ -63,6 +63,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         myRecyclerView.setHasFixedSize(fixed);
     }
 
+    //add headerview
     public void addHeaderView(View headerView, int headerHeight) {
         this.headerLayout.removeAllViews();
         this.headerLayout.addView(headerView);
@@ -71,6 +72,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         this.headerLayout.setLayoutParams(layoutParams);
     }
 
+    //add footerview
     public void addFooterView(View footerView, int footerHeight) {
         this.footerLayout.removeAllViews();
         this.footerLayout.addView(footerView);
@@ -122,7 +124,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         helper.onNestedScrollAccepted(child, target, axes);
     }
 
-    //父view拦截子view的滚动
+    //parent view intercept child view scroll
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
         if (totalY < 0 && myRecyclerView.isOrientation(0) || totalY > 0 && myRecyclerView.isOrientation(1)) {
             isfling = true;
@@ -159,9 +161,9 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         }
     }
 
-    //子view滑动结束调用
-    //dyUnconsumed < 0 向下滚
-    //dyUnconsumed > 0 向上滚
+    //while child view move finish
+    //dyUnconsumed < 0 move down
+    //dyUnconsumed > 0 move up
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         if (dyUnconsumed != 0) {
             totalY += dyUnconsumed;
@@ -237,7 +239,10 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
             }
         }
 
-        private boolean isOrientation(int orientation) {//orientation,0代表向下，1代表向上
+        //orientation
+        // 0 menas down
+        // 1 means up
+        private boolean isOrientation(int orientation) {
             if (orientation == 0)
                 return isCanPullDown();
             else if (orientation == 1)
@@ -253,26 +258,6 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
             return !canScrollVertically(1);
         }
 
-//        private int scrollLoad() {
-//            int lastItem = 0;
-//            int itemCount = 0;
-//            int spanCount = 1;
-//            if (staggeredGridLayoutManager != null) {
-//                lastItem = staggeredGridLayoutManager.findLastVisibleItemPositions(null)[0];
-//                itemCount = staggeredGridLayoutManager.getItemCount();
-//                spanCount = staggeredGridLayoutManager.getSpanCount();
-//            } else if (linearLayoutManager != null) {
-//                lastItem = linearLayoutManager.findLastVisibleItemPosition();
-//                itemCount = linearLayoutManager.getItemCount();
-//                spanCount = 1;
-//            } else if (gridLayoutManager != null) {
-//                lastItem = gridLayoutManager.findLastVisibleItemPosition();
-//                itemCount = gridLayoutManager.getItemCount();
-//                spanCount = gridLayoutManager.getSpanCount();
-//            }
-//            return ((itemCount - 1) / spanCount + 1) - (lastItem / spanCount + 1);
-//        }
-
         private boolean isVertical() {
             if (staggeredGridLayoutManager != null)
                 return staggeredGridLayoutManager.getOrientation() == StaggeredGridLayoutManager.VERTICAL;
@@ -282,14 +267,6 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
                 return gridLayoutManager.getOrientation() == GridLayoutManager.VERTICAL;
             return false;
         }
-
-//        public void onScrolled(int dx, int dy) {
-//            if (dy > 0 && !isScrollLoad) {
-//                if (onScrollListener != null) {
-//                    onScrollListener.scrollLoad(scrollLoad());//传递滚动到倒数第几行
-//                }
-//            }
-//        }
     }
 
 }
