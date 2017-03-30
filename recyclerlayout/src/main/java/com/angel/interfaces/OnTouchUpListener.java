@@ -1,4 +1,4 @@
-package sw.angel.recyclerlayout.interfaces;
+package com.angel.interfaces;
 
 /**
  * Created by Angel on 2016/8/17.

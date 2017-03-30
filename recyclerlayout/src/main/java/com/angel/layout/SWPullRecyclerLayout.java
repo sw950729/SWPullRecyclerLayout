@@ -1,4 +1,4 @@
-package sw.angel.recyclerlayout.layout;
+package com.angel.layout;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.support.v7.widget.*;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
-import sw.angel.recyclerlayout.interfaces.OnTouchUpListener;
+import com.angel.interfaces.OnTouchUpListener;
 
 /**
  * Created by Angel on 2016/7/27.
