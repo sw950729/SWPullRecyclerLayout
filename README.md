@@ -12,6 +12,7 @@ complie 'com.angel:SWPullRecyclerLayout:1.1.1'
   
 
 SWRecyclerAdapter的使用介绍      
+-------  
 ```
 public class NumAdapter extends SWRecyclerAdapter<String> {
 
