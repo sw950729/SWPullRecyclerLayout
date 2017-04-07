@@ -3,7 +3,7 @@
 ====  
 交流群
 -------     
-232748032  
+android交流中心：232748032 <a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=8581e738855f7d4f19bfa79d955e25d9ae870a7e722739ae1b6cb5772fad4f9a"><img border="0" src="http://img.blog.csdn.net/20151113153010631" alt="android交流中心" title="android交流中心"></a>
 
 介绍
 -------      
