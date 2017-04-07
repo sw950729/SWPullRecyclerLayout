@@ -42,18 +42,18 @@ public class MainActivity extends Activity implements OnTouchUpListener {
     }
 
     @Override
-    public void touchUp() {
-        if (recycler.getTotal() >= 100) {
-            recycler.setScrollTo(recycler.getTotal(), 100);
-            if (!recycler.isScrollRefresh()) {
-                recycler.setIsScrollRefresh(true);
-            }
-        } else if (-recycler.getTotal() >= 100) {
-            recycler.setScrollTo(recycler.getTotal(), -100);
-            if (!recycler.isScrollLoad()) {
-            }
-        } else {
-            recycler.setScrollTo(0, 0);
-        }
+    public void OnRefreshing() {
+        Log.i("angel", "OnRefreshing: 正在刷新");
+        //刷新完执行
+//        recycler.setIsScrollRefresh(false);
+//        recycler.setScrollTo(recycler.getTotal(),0);
+    }
+
+    @Override
+    public void OnLoading() {
+        Log.i("angel", "OnLoading: 正在加载");
+        //加载完执行
+//        recycler.setIsScrollLoad(false);
+//        recycler.setScrollTo(recycler.getTotal(),0);
     }
 }
