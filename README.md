@@ -11,8 +11,7 @@
 complie 'com.angel:SWPullRecyclerLayout:1.1.1'
   
 
-SWRecyclerAdapter的使用介绍  
-···public class NumAdapter extends SWRecyclerAdapter<String> {
+SWRecyclerAdapter的使用介绍   ```public class NumAdapter extends SWRecyclerAdapter<String> {
 
     private List<String> list;
     private Context context;
@@ -31,5 +30,5 @@ SWRecyclerAdapter的使用介绍  
     @Override
     public void bindData(SWViewHolder holder, int position, String item) {
         holder.getTextView(R.id.text).setText(list.get(position)+"");
-    }
-}···
+    }
+}```
