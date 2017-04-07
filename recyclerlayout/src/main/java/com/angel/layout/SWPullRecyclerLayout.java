@@ -27,6 +27,8 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     private LinearLayout footerLayout = null;
     private OnTouchUpListener onTouchUpListener = null;
     private boolean isfling = false;
+    private int headerHeight = 0;
+    private int footerHeight = 0;
 
     public SWPullRecyclerLayout(Context context) {
         super(context);
@@ -66,6 +68,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
 
     //add headerview
     public void addHeaderView(View headerView, int headerHeight) {
+        this.headerHeight = headerHeight;
         this.headerLayout.removeAllViews();
         this.headerLayout.addView(headerView);
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, headerHeight);
@@ -75,6 +78,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
 
     //add footerview
     public void addFooterView(View footerView, int footerHeight) {
+        this.footerHeight = footerHeight;
         this.footerLayout.removeAllViews();
         this.footerLayout.addView(footerView);
         this.footerLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, footerHeight));
@@ -176,7 +180,21 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         helper.onStopNestedScroll(child);
         if (onTouchUpListener != null) {
             isfling = false;
-            onTouchUpListener.touchUp();
+            if (this.getTotal() >= headerHeight) {
+                this.setScrollTo(this.getTotal(), headerHeight);
+                if (!this.isScrollRefresh()) {
+                    this.setIsScrollRefresh(true);
+                    onTouchUpListener.OnRefreshing();
+                }
+            } else if (-this.getTotal() >= footerHeight) {
+                this.setScrollTo(this.getTotal(), -footerHeight);
+                if (!this.isScrollLoad()) {
+                    this.setIsScrollLoad(true);
+                    onTouchUpListener.OnLoading();
+                }
+            } else {
+                this.setScrollTo(0, 0);
+            }
         }
     }
 
