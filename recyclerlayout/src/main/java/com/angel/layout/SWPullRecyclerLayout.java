@@ -8,6 +8,7 @@ import android.support.v7.widget.*;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
+import com.angel.adapter.SWRecyclerAdapter;
 import com.angel.interfaces.OnTouchUpListener;
 
 /**
@@ -52,12 +53,12 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         addView(this.footerLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 
-    public void setMyRecyclerView(RecyclerView.LayoutManager layoutManager, RecyclerView.Adapter adapter) {
+    public void setMyRecyclerView(RecyclerView.LayoutManager layoutManager, SWRecyclerAdapter adapter) {
         myRecyclerView.setMyLayoutManager(layoutManager);
         myRecyclerView.setAdapter(adapter);
     }
 
-    public void setMyRecyclerView(RecyclerView.LayoutManager layoutManager, RecyclerView.Adapter adapter, boolean fixed) {
+    public void setMyRecyclerView(RecyclerView.LayoutManager layoutManager, SWRecyclerAdapter adapter, boolean fixed) {
         myRecyclerView.setMyLayoutManager(layoutManager);
         myRecyclerView.setAdapter(adapter);
         myRecyclerView.setHasFixedSize(fixed);
