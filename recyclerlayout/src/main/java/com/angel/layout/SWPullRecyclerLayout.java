@@ -185,12 +185,16 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
                 if (!this.isScrollRefresh()) {
                     this.setIsScrollRefresh(true);
                     onTouchUpListener.OnRefreshing();
+                    this.setIsScrollRefresh(false);
+                    this.setScrollTo(this.getTotal(), 0);
                 }
             } else if (-this.getTotal() >= footerHeight) {
                 this.setScrollTo(this.getTotal(), -footerHeight);
                 if (!this.isScrollLoad()) {
                     this.setIsScrollLoad(true);
                     onTouchUpListener.OnLoading();
+                    this.setIsScrollLoad(false);
+                    this.setScrollTo(this.getTotal(), 0);
                 }
             } else {
                 this.setScrollTo(0, 0);
