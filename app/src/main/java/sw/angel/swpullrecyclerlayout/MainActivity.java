@@ -1,6 +1,7 @@
 package sw.angel.swpullrecyclerlayout;
 
 import android.app.Activity;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,16 +45,10 @@ public class MainActivity extends Activity implements OnTouchUpListener {
     @Override
     public void OnRefreshing() {
         Log.i("angel", "OnRefreshing: 正在刷新");
-        //刷新完执行
-//        recycler.setIsScrollRefresh(false);
-//        recycler.setScrollTo(recycler.getTotal(),0);
     }
 
     @Override
     public void OnLoading() {
         Log.i("angel", "OnLoading: 正在加载");
-        //加载完执行
-//        recycler.setIsScrollLoad(false);
-//        recycler.setScrollTo(recycler.getTotal(),0);
     }
 }
