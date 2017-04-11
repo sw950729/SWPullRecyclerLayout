@@ -11,7 +11,7 @@ android交流中心：232748032 <a target="_blank" href="http://shang.qq.com/wpa
 
 最新版本  
 -------      
-complie 'com.angel:SWPullRecyclerLayout:1.1.2'
+complie 'com.angel:SWPullRecyclerLayout:1.1.3'
   
 SWRecyclerAdapter的使用介绍     
 --------      
@@ -39,3 +39,6 @@ public class NumAdapter extends SWRecyclerAdapter<String> {
     }
 }
 ```
+SWDiffCallBack
+---------
+使用介绍请看：http://blog.csdn.net/sw950729/article/details/70052693
