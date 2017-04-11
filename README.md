@@ -11,7 +11,7 @@ android交流中心：232748032 <a target="_blank" href="http://shang.qq.com/wpa
 
 最新版本  
 -------      
-complie 'com.angel:SWPullRecyclerLayout:1.1.1'
+complie 'com.angel:SWPullRecyclerLayout:1.1.2'
   
 SWRecyclerAdapter的使用介绍     
 --------      
