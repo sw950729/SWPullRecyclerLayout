@@ -30,8 +30,6 @@ complie 'com.angel:SWPullRecyclerLayout:1.1.3'
  ```  
     
 SWRecyclerAdapter的使用介绍         
-
- 
 --------         
 目前adpter我给注入了textview 、ImageView、button 近期事情比较多，后续我会更新一篇关于独一无二的万能适配器的文章 请关注http://blog.csdn.net/sw950729 的更新。
 ```
