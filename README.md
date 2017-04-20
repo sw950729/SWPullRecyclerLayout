@@ -12,9 +12,25 @@ android交流中心：232748032 <a target="_blank" href="http://shang.qq.com/wpa
 最新版本  
 -------      
 complie 'com.angel:SWPullRecyclerLayout:1.1.3'
-  
-SWRecyclerAdapter的使用介绍     
---------      
+  
+因有小伙伴用1.1.3出现了问题，我刚进行了更新，建议大家直接导入moudle使用，具体原因如下：刷新时，header直接归位，然后进行刷新操作，加载亦如此，现代码已更新，使用时在接口中使用此方法即可。    
+```
+    public void OnRefreshing() {
+        Log.i("angel", "OnRefreshing: 正在刷新");
+//        recycler.setIsScrollRefresh(false);
+//        recycler.setScrollTo(recycler.getTotal(), 0);
+
+    }
+
+    public void OnLoading() {
+        Log.i("angel", "OnLoading: 正在加载");
+//        recycler.setIsScrollLoad(false);
+//        recycler.setScrollTo(recycler.getTotal(), 0);
+    }
+ ```  
+    
+SWRecyclerAdapter的使用介绍    
+--------      
 目前adpter我给注入了textview 、ImageView、button 近期事情比较多，后续我会更新一篇关于独一无二的万能适配器的文章 请关注http://blog.csdn.net/sw950729 的更新。
 ```
 public class NumAdapter extends SWRecyclerAdapter<String> {
