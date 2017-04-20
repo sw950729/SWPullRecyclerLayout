@@ -66,7 +66,12 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         myRecyclerView.setHasFixedSize(fixed);
     }
 
-    //add headerview
+    /**
+     * add headerview
+     *
+     * @param headerView
+     * @param headerHeight
+     */
     public void addHeaderView(View headerView, int headerHeight) {
         this.headerHeight = headerHeight;
         this.headerLayout.removeAllViews();
@@ -76,7 +81,12 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         this.headerLayout.setLayoutParams(layoutParams);
     }
 
-    //add footerview
+    /**
+     * add footerview
+     *
+     * @param footerView
+     * @param footerHeight
+     */
     public void addFooterView(View footerView, int footerHeight) {
         this.footerHeight = footerHeight;
         this.footerLayout.removeAllViews();
@@ -129,7 +139,9 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         helper.onNestedScrollAccepted(child, target, axes);
     }
 
-    //parent view intercept child view scroll
+    /**
+     * parent view intercept child view scroll
+     */
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
         if (totalY < 0 && myRecyclerView.isOrientation(0) || totalY > 0 && myRecyclerView.isOrientation(1)) {
             isfling = true;
@@ -166,9 +178,11 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         }
     }
 
-    //while child view move finish
-    //dyUnconsumed < 0 move down
-    //dyUnconsumed > 0 move up
+    /**
+     * while child view move finish
+     * dyUnconsumed < 0 move down
+     * dyUnconsumed > 0 move up
+     */
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         if (dyUnconsumed != 0) {
             totalY += dyUnconsumed;
@@ -185,16 +199,12 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
                 if (!this.isScrollRefresh()) {
                     this.setIsScrollRefresh(true);
                     onTouchUpListener.OnRefreshing();
-                    this.setIsScrollRefresh(false);
-                    this.setScrollTo(this.getTotal(), 0);
                 }
             } else if (-this.getTotal() >= footerHeight) {
                 this.setScrollTo(this.getTotal(), -footerHeight);
                 if (!this.isScrollLoad()) {
                     this.setIsScrollLoad(true);
                     onTouchUpListener.OnLoading();
-                    this.setIsScrollLoad(false);
-                    this.setScrollTo(this.getTotal(), 0);
                 }
             } else {
                 this.setScrollTo(0, 0);
@@ -262,9 +272,11 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
             }
         }
 
-        //orientation
-        // 0 menas down
-        // 1 means up
+        /**
+         * orientation
+         * 0 menas down
+         * 1 means up
+         */
         private boolean isOrientation(int orientation) {
             if (orientation == 0)
                 return isCanPullDown();
