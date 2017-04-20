@@ -49,6 +49,7 @@ public class MainActivity extends Activity implements OnTouchUpListener {
         Log.i("angel", "OnRefreshing: 正在刷新");
 //        recycler.setIsScrollRefresh(false);
 //        recycler.setScrollTo(recycler.getTotal(), 0);
+
     }
 
     @Override
