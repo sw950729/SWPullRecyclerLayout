@@ -51,4 +51,11 @@ public abstract class SWRecyclerAdapter<T> extends RecyclerView.Adapter<SWViewHo
         list.remove(positon);
         notifyItemRemoved(positon);
     }
+
+    public void clearData() {
+        if (list != null && list.size() > 0) {
+            list.clear();
+        }
+        notifyDataSetChanged();
+    }
 }

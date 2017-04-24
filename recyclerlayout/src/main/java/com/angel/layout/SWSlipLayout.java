@@ -146,9 +146,29 @@ public class SWSlipLayout extends LinearLayout {
 
     public boolean onTouchEvent(MotionEvent event) {
         requestDisallowInterceptTouchEvent(true);
-        helper.processTouchEvent(event);
-        return true;
+//        return helper.shouldInterceptTouchEvent(event);
+        float startX = 0;
+        float startY = 0;
+        float endX = 0;
+        float endY = 0;
+        float distanceX = 0;
+        float distanceY = 0;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                startX = event.getX();
+                startY = event.getY();
+            case MotionEvent.ACTION_MOVE:
+                endX = event.getX();
+                endY = event.getY();
+        }
+        distanceX = Math.abs(endX - startX);
+        distanceY = Math.abs(endY - startY);
+        if (distanceX > distanceY) {
+            requestDisallowInterceptTouchEvent(true);
+        }
+        return super.onInterceptTouchEvent(event);
     }
+
 
     protected void onFinishInflate() {
         super.onFinishInflate();
