@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:orientation="vertical"
-			  android:layout_width="match_parent"
-			  android:layout_height="wrap_content">
+<com.angel.layout.SWSlipLayout xmlns:android="http://schemas.android.com/apk/res/android"
+							   android:orientation="vertical"
+							   android:layout_width="match_parent"
+							   android:layout_height="wrap_content">
 
 	<TextView android:layout_width="match_parent"
 			  android:layout_height="50dp"
@@ -10,4 +10,29 @@
 			  android:gravity="center"
 			  android:background="#ff44ff"
 			  android:id="@+id/text"/>
-</LinearLayout>
+	<LinearLayout
+			android:id="@+id/linear"
+			android:layout_width="160dp"
+			android:layout_height="50dp">
+
+		<TextView
+				android:id="@+id/text_delete"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="match_parent"
+				android:background="@android:color/black"
+				android:gravity="center"
+				android:text="置顶"
+				android:textColor="@android:color/white"/>
+
+		<TextView
+				android:id="@+id/texts"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="match_parent"
+				android:background="@android:color/black"
+				android:gravity="center"
+				android:text="删除"
+				android:textColor="@android:color/white"/>
+	</LinearLayout>
+</com.angel.layout.SWSlipLayout>
