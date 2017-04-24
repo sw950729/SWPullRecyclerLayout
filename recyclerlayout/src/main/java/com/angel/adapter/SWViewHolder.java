@@ -8,6 +8,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.angel.layout.SWSlipLayout;
+import com.angel.layout.SwipeLinearLayout;
+
 /**
  * Created by Angel on 2017/4/7.
  */
@@ -44,7 +47,9 @@ public class SWViewHolder extends RecyclerView.ViewHolder {
     public ImageView getImageView(int viewId) {
         return (ImageView) getView(viewId);
     }
-
+    public SwipeLinearLayout getSWSlipLayout(int viewId) {
+        return (SwipeLinearLayout) getView(viewId);
+    }
     public SWViewHolder setText(int viewId, String value) {
         TextView view = findViewById(viewId);
         view.setText(value);
