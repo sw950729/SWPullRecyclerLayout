@@ -106,7 +106,6 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         return -totalY / 2;
     }
 
-
     public void setIsScrollLoad(boolean isScrollLoad) {
         myRecyclerView.isScrollLoad = isScrollLoad;
     }
@@ -278,10 +277,11 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
          * 1 means up
          */
         private boolean isOrientation(int orientation) {
-            if (orientation == 0)
+            if (orientation == 0) {
                 return isCanPullDown();
-            else if (orientation == 1)
+            } else if (orientation == 1) {
                 return isCanPullUp();
+            }
             return false;
         }
 
@@ -294,12 +294,13 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         }
 
         private boolean isVertical() {
-            if (staggeredGridLayoutManager != null)
+            if (staggeredGridLayoutManager != null) {
                 return staggeredGridLayoutManager.getOrientation() == StaggeredGridLayoutManager.VERTICAL;
-            else if (linearLayoutManager != null)
+            } else if (linearLayoutManager != null) {
                 return linearLayoutManager.getOrientation() == LinearLayoutManager.VERTICAL;
-            else if (gridLayoutManager != null)
+            } else if (gridLayoutManager != null) {
                 return gridLayoutManager.getOrientation() == GridLayoutManager.VERTICAL;
+            }
             return false;
         }
     }

@@ -1,7 +1,7 @@
 package com.angel.interfaces;
 
-import com.angel.layout.SWSlipLayout;
+import com.angel.layout.SWSlipeLayout;
 
 public interface OnSwipeStatusListener {
-    void onStatusChanged(SWSlipLayout.Status status);
+    void onStatusChanged(SWSlipeLayout layout, SWSlipeLayout.Status status);
 }

@@ -3,10 +3,8 @@ package com.angel.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,19 +12,17 @@ import java.util.List;
  */
 public abstract class SWRecyclerAdapter<T> extends RecyclerView.Adapter<SWViewHolder> {
 
-    private Context context;
     private List<T> list;
     private LayoutInflater inflater;
 
     public SWRecyclerAdapter(Context context, List<T> list) {
-        this.context = context;
         this.list = list;
         inflater = LayoutInflater.from(context);
     }
 
-    public SWViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SWViewHolder onCreateViewHolder(ViewGroup parent, int layoutID) {
         final SWViewHolder holder = new SWViewHolder(
-                inflater.inflate(getItemLayoutId(viewType), parent, false));
+                inflater.inflate(getItemLayoutId(layoutID), parent, false));
         return holder;
     }
 
@@ -34,7 +30,7 @@ public abstract class SWRecyclerAdapter<T> extends RecyclerView.Adapter<SWViewHo
         bindData(holder, position, list.get(position));
     }
 
-    abstract public int getItemLayoutId(int viewType);
+    abstract public int getItemLayoutId(int layoutID);
 
     abstract public void bindData(SWViewHolder holder, int position, T item);
 
@@ -52,7 +48,7 @@ public abstract class SWRecyclerAdapter<T> extends RecyclerView.Adapter<SWViewHo
         notifyItemRemoved(positon);
     }
 
-    public void clearData() {
+    public void clear() {
         if (list != null && list.size() > 0) {
             list.clear();
         }

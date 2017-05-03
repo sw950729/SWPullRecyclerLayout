@@ -4,13 +4,12 @@ import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import com.angel.interfaces.OnSwipeStatusListener;
 
-public class SWSlipLayout extends LinearLayout {
+public class SWSlipeLayout extends LinearLayout {
 
     private View hiddenView;
     private View itemView;
@@ -27,28 +26,16 @@ public class SWSlipLayout extends LinearLayout {
         Open, Close
     }
 
-    /**
-     * set slide status
-     */
-    public void setStatus(Status status) {
-        this.status = status;
-        if (status == Status.Open) {
-            open();
-        } else {
-            close();
-        }
-    }
-
     public void setOnSwipeStatusListener(OnSwipeStatusListener listener) {
         this.listener = listener;
     }
 
-
-    public SWSlipLayout(Context context) {
+    public SWSlipeLayout(Context context) {
         super(context);
+        inital();
     }
 
-    public SWSlipLayout(Context context, AttributeSet attrs) {
+    public SWSlipeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         inital();
     }
@@ -82,6 +69,9 @@ public class SWSlipLayout extends LinearLayout {
 
         public void onViewPositionChanged(View changedView, int left, int top,
                                           int dx, int dy) {
+            if (dx != 0) {
+                getParent().requestDisallowInterceptTouchEvent(true);
+            }
             if (itemView == changedView) {
                 hiddenView.offsetLeftAndRight(dx);
             } else {
@@ -92,9 +82,7 @@ public class SWSlipLayout extends LinearLayout {
 
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             if (releasedChild == itemView) {
-                if (xvel == 0 && Math.abs(itemView.getLeft()) > hiddenViewWidth / 2.0f) {
-                    open();
-                } else if (xvel < 0) {
+                if (xvel == 0 && Math.abs(itemView.getLeft()) > hiddenViewWidth / 2.0f || xvel < 0) {
                     open();
                 } else {
                     close();
@@ -107,28 +95,28 @@ public class SWSlipLayout extends LinearLayout {
     /**
      * slide close
      */
-    private void close() {
+    public void close() {
         changeStatus = status;
         status = Status.Close;
         if (helper.smoothSlideViewTo(itemView, 0, 0)) {
             ViewCompat.postInvalidateOnAnimation(this);
         }
         if (listener != null && changeStatus == Status.Open) {
-            listener.onStatusChanged(status);
+            listener.onStatusChanged(this, status);
         }
     }
 
     /**
      * slide open
      */
-    private void open() {
+    public void open() {
         changeStatus = status;
         status = Status.Open;
         if (helper.smoothSlideViewTo(itemView, -hiddenViewWidth, 0)) {
             ViewCompat.postInvalidateOnAnimation(this);
         }
         if (listener != null && changeStatus == Status.Close) {
-            listener.onStatusChanged(status);
+            listener.onStatusChanged(this, status);
         }
     }
 
@@ -145,30 +133,9 @@ public class SWSlipLayout extends LinearLayout {
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        requestDisallowInterceptTouchEvent(true);
-//        return helper.shouldInterceptTouchEvent(event);
-        float startX = 0;
-        float startY = 0;
-        float endX = 0;
-        float endY = 0;
-        float distanceX = 0;
-        float distanceY = 0;
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                startX = event.getX();
-                startY = event.getY();
-            case MotionEvent.ACTION_MOVE:
-                endX = event.getX();
-                endY = event.getY();
-        }
-        distanceX = Math.abs(endX - startX);
-        distanceY = Math.abs(endY - startY);
-        if (distanceX > distanceY) {
-            requestDisallowInterceptTouchEvent(true);
-        }
-        return super.onInterceptTouchEvent(event);
+        helper.processTouchEvent(event);
+        return true;
     }
-
 
     protected void onFinishInflate() {
         super.onFinishInflate();
