@@ -42,10 +42,13 @@ public class NumAdapter extends SWRecyclerAdapter<String> implements OnSwipeStat
         swSlipeLayouts.add(holder.getSWSlipLayout(R.id.sll));
         textView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                for (SWSlipeLayout swSlipeLayout : swSlipeLayouts) {
-                    swSlipeLayout.close();
+                if (swSlipeLayout.isOpen()) {
+                    for (SWSlipeLayout swSlipeLayout : swSlipeLayouts) {
+                        swSlipeLayout.close();
+                    }
+                } else {
+                    Toast.makeText(context, position + 1 + "", 1000).show();
                 }
-                Toast.makeText(context, position + 1 + "", 1000).show();
             }
         });
         swSlipeLayout.setOnSwipeStatusListener(this);
