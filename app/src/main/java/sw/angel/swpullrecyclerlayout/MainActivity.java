@@ -26,10 +26,10 @@ public class MainActivity extends Activity implements OnTouchUpListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        inital();
+        initial();
     }
 
-    private void inital() {
+    private void initial() {
         recycler = (SWPullRecyclerLayout) findViewById(R.id.recycler);
         List<String> list = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
@@ -49,7 +49,6 @@ public class MainActivity extends Activity implements OnTouchUpListener {
         Log.i("angel", "OnRefreshing: 正在刷新");
 //        recycler.setIsScrollRefresh(false);
 //        recycler.setScrollTo(recycler.getTotal(), 0);
-
     }
 
     @Override
