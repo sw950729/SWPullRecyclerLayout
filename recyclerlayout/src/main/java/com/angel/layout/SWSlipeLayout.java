@@ -19,6 +19,7 @@ public class SWSlipeLayout extends LinearLayout {
     private OnSwipeStatusListener listener;
     private Status status = Status.Close;
     private Status changeStatus = Status.Close;
+    private boolean isOpen = false;
 
     /**
      * status
@@ -93,10 +94,15 @@ public class SWSlipeLayout extends LinearLayout {
 
     };
 
+    public boolean  isOpen(){
+        return isOpen;
+    }
+
     /**
      * slide close
      */
     public void close() {
+        isOpen = !isOpen;
         changeStatus = status;
         status = Status.Close;
         if (helper.smoothSlideViewTo(itemView, 0, 0)) {
@@ -111,6 +117,7 @@ public class SWSlipeLayout extends LinearLayout {
      * slide open
      */
     public void open() {
+        isOpen = !isOpen;
         changeStatus = status;
         status = Status.Open;
         if (helper.smoothSlideViewTo(itemView, -hiddenViewWidth, 0)) {
