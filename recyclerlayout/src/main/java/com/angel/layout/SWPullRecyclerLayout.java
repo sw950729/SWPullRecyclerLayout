@@ -33,16 +33,16 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     public SWPullRecyclerLayout(Context context) {
         super(context);
         this.context = context;
-        inital();
+        initial();
     }
 
     public SWPullRecyclerLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        inital();
+        initial();
     }
 
-    private void inital() {
+    private void initial() {
         helper = new NestedScrollingParentHelper(this);
         headerLayout = new LinearLayout(context);
         myRecyclerView = new MyRecyclerView(context);

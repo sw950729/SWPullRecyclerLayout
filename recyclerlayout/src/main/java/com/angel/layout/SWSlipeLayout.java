@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -32,15 +33,15 @@ public class SWSlipeLayout extends LinearLayout {
 
     public SWSlipeLayout(Context context) {
         super(context);
-        inital();
+        initial();
     }
 
     public SWSlipeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        inital();
+        initial();
     }
 
-    private void inital() {
+    private void initial() {
         helper = ViewDragHelper.create(this, callback);
         setOrientation(HORIZONTAL);
     }
