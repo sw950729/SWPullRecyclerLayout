@@ -1,6 +1,7 @@
 package com.angel.layout;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
@@ -9,6 +10,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import com.angel.interfaces.OnSwipeStatusListener;
+import org.w3c.dom.Attr;
+import sw.angel.recyclerlayout.R;
 
 public class SWSlipeLayout extends LinearLayout {
 
@@ -20,6 +23,7 @@ public class SWSlipeLayout extends LinearLayout {
     private Status status = Status.Close;
     private Status changeStatus = Status.Close;
     private boolean isOpen = false;
+    private boolean slipe_enable = true;
 
     /**
      * status
@@ -33,24 +37,28 @@ public class SWSlipeLayout extends LinearLayout {
     }
 
     public SWSlipeLayout(Context context) {
-        super(context);
-        initial();
+        super(context, null);
     }
 
     public SWSlipeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initial();
+        initial(context, attrs);
     }
 
-    private void initial() {
-        helper = ViewDragHelper.create(this, callback);
+    private void initial(Context context, AttributeSet attrs) {
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.SWSlipeLayout);
+        slipe_enable = array.getBoolean(R.styleable.SWSlipeLayout_slipe_enable, true);
+        if (slipe_enable) {
+            helper = ViewDragHelper.create(this, callback);
+        }
         setOrientation(HORIZONTAL);
+        array.recycle();
     }
 
     ViewDragHelper.Callback callback = new ViewDragHelper.Callback() {
 
         public boolean tryCaptureView(View view, int arg1) {
-            return view == itemView;
+            return true;
         }
 
         public int clampViewPositionHorizontal(View child, int left, int dx) {
@@ -94,7 +102,7 @@ public class SWSlipeLayout extends LinearLayout {
 
     };
 
-    public boolean  isOpen(){
+    public boolean isOpen() {
         return isOpen;
     }
 
@@ -131,18 +139,26 @@ public class SWSlipeLayout extends LinearLayout {
     public void computeScroll() {
         super.computeScroll();
         // start animation
-        if (helper.continueSettling(true)) {
-            ViewCompat.postInvalidateOnAnimation(this);
+        if (slipe_enable) {
+            if (helper.continueSettling(true)) {
+                ViewCompat.postInvalidateOnAnimation(this);
+            }
         }
     }
 
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        return helper.shouldInterceptTouchEvent(event);
+        if (slipe_enable) {
+            return helper.shouldInterceptTouchEvent(event);
+        }
+        return super.onInterceptTouchEvent(event);
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        helper.processTouchEvent(event);
-        return true;
+        if (slipe_enable) {
+            helper.processTouchEvent(event);
+            return true;
+        }
+        return super.onTouchEvent(event);
     }
 
     protected void onFinishInflate() {
