@@ -11,23 +11,8 @@ android交流中心：232748032 <a target="_blank" href="http://shang.qq.com/wpa
 
 最新版本  
 -------      
-complie 'com.angel:SWPullRecyclerLayout:1.1.3'    
-  
-因有小伙伴用1.1.3出现了问题，我刚进行了更新，因最近在更新新的功能以及维护公司项目，时间有限，后期我会重新更新jcenter。如不放心使用，可直接使用1.0.0版本。目前建议大家直接导入moudle使用，具体原因如下：刷新时，header直接归位，然后进行刷新操作，加载亦如此，现代码已更新，使用时在接口中使用此方法即可。    
-```
-    public void OnRefreshing() {
-        Log.i("angel", "OnRefreshing: 正在刷新");
-//        recycler.setIsScrollRefresh(false);
-//        recycler.setScrollTo(recycler.getTotal(), 0);
+complie 'com.angel:SWPullRecyclerLayout:1.1.5'    
 
-    }
-
-    public void OnLoading() {
-        Log.i("angel", "OnLoading: 正在加载");
-//        recycler.setIsScrollLoad(false);
-//        recycler.setScrollTo(recycler.getTotal(), 0);
-    }
- ```  
     
 SWRecyclerAdapter的使用介绍    
 -------  
