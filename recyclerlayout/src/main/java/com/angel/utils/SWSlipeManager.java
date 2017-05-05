@@ -28,7 +28,7 @@ public class SWSlipeManager {
     /**
      * if s==null means no item is open
      *
-     * @return
+     * @return ture means open else close
      */
     public boolean haveOpened() {
         return swSlipeLayout != null;
@@ -36,9 +36,8 @@ public class SWSlipeManager {
 
     /**
      * if s==null means no item is open
-     * true means two item is not the same one and one item is open
      *
-     * @return
+     * @return true means two item is not the same one and one item is open
      */
     public boolean haveOpened(SWSlipeLayout s) {
         return swSlipeLayout != null && swSlipeLayout == s;

@@ -67,9 +67,6 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
 
     /**
      * add headerview
-     *
-     * @param headerView
-     * @param headerHeight
      */
     public void addHeaderView(View headerView, int headerHeight) {
         this.headerHeight = headerHeight;
@@ -82,9 +79,6 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
 
     /**
      * add footerview
-     *
-     * @param footerView
-     * @param footerHeight
      */
     public void addFooterView(View footerView, int footerHeight) {
         this.footerHeight = footerHeight;
@@ -178,8 +172,8 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
 
     /**
      * while child view move finish
-     * dyUnconsumed < 0 move down
-     * dyUnconsumed > 0 move up
+     * dyUnconsumed less than 0,move down
+     * dyUnconsumed  more than 0,move up
      */
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         if (dyUnconsumed != 0) {
