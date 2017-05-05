@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import com.angel.interfaces.OnTouchUpListener;
 import com.angel.layout.SWPullRecyclerLayout;
+import com.angel.utils.SWSlipeManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,17 +45,17 @@ public class MainActivity extends Activity implements OnTouchUpListener {
         recycler.addOnTouchUpListener(this);
     }
 
-    @Override
     public void OnRefreshing() {
         Log.i("angel", "OnRefreshing: 正在刷新");
 //        recycler.setIsScrollRefresh(false);
 //        recycler.setScrollTo(recycler.getTotal(), 0);
+//        SWSlipeManager.getInstance().close();
     }
 
-    @Override
     public void OnLoading() {
         Log.i("angel", "OnLoading: 正在加载");
 //        recycler.setIsScrollLoad(false);
 //        recycler.setScrollTo(recycler.getTotal(), 0);
+//        SWSlipeManager.getInstance().close();
     }
 }

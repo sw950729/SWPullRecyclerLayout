@@ -2,8 +2,10 @@ package com.angel.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -38,14 +40,14 @@ public abstract class SWRecyclerAdapter<T> extends RecyclerView.Adapter<SWViewHo
         return list.size();
     }
 
-    public void add(int positon, T item) {
-        list.add(positon, item);
-        notifyItemInserted(positon);
+    public void add(int position, T item) {
+        list.add(position, item);
+        notifyItemInserted(position);
     }
 
-    public void delete(int positon) {
-        list.remove(positon);
-        notifyItemRemoved(positon);
+    public void delete(int position) {
+        list.remove(position);
+        notifyItemRemoved(position);
     }
 
     public void clear() {
@@ -54,4 +56,11 @@ public abstract class SWRecyclerAdapter<T> extends RecyclerView.Adapter<SWViewHo
         }
         notifyDataSetChanged();
     }
+
+    public void setTop(int position) {
+        list.add(0, list.get(position));
+        list.remove(position + 1);
+        notifyDataSetChanged();
+    }
+
 }

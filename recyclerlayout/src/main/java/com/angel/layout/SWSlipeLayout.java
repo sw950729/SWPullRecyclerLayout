@@ -113,6 +113,7 @@ public class SWSlipeLayout extends LinearLayout {
         if (helper.smoothSlideViewTo(itemView, 0, 0)) {
             ViewCompat.postInvalidateOnAnimation(this);
         }
+        SWSlipeManager.getInstance().clear();
     }
 
     /**
