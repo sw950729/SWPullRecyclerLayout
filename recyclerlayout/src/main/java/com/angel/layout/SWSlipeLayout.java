@@ -45,6 +45,7 @@ public class SWSlipeLayout extends LinearLayout {
         initial(context, attrs);
     }
 
+
     private void initial(Context context, AttributeSet attrs) {
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.SWSlipeLayout);
         slipe_enable = array.getBoolean(R.styleable.SWSlipeLayout_slipe_enable, true);
