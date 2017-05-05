@@ -8,7 +8,6 @@ import android.support.v7.widget.*;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
-import com.angel.adapter.SWRecyclerAdapter;
 import com.angel.interfaces.OnTouchUpListener;
 
 /**

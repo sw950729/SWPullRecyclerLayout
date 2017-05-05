@@ -1,7 +1,6 @@
 package com.angel.layout;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
@@ -9,21 +8,24 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
-import com.angel.interfaces.OnSwipeStatusListener;
-import org.w3c.dom.Attr;
-import sw.angel.recyclerlayout.R;
+import com.angel.utils.SWSlipeManager;
 
+/**
+ * Created by Angel on 2017/4/10.
+ */
 public class SWSlipeLayout extends LinearLayout {
 
     private View hiddenView;
     private View itemView;
     private int hiddenViewWidth;
     private ViewDragHelper helper;
-    private OnSwipeStatusListener listener;
-    private Status status = Status.Close;
     private Status changeStatus = Status.Close;
-    private boolean isOpen = false;
-    private boolean slipe_enable = true;
+    private float downX;
+    private float downY;
+    private float moveX;
+    private float moveY;
+    private float downIX;
+    private float downIY;
 
     /**
      * status
@@ -32,34 +34,25 @@ public class SWSlipeLayout extends LinearLayout {
         Open, Close
     }
 
-    public void setOnSwipeStatusListener(OnSwipeStatusListener listener) {
-        this.listener = listener;
-    }
-
     public SWSlipeLayout(Context context) {
-        super(context, null);
+        super(context);
+        initial();
     }
 
     public SWSlipeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initial(context, attrs);
+        initial();
     }
 
-
-    private void initial(Context context, AttributeSet attrs) {
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.SWSlipeLayout);
-        slipe_enable = array.getBoolean(R.styleable.SWSlipeLayout_slipe_enable, true);
-        if (slipe_enable) {
-            helper = ViewDragHelper.create(this, callback);
-        }
+    private void initial() {
+        helper = ViewDragHelper.create(this, callback);
         setOrientation(HORIZONTAL);
-        array.recycle();
     }
 
     ViewDragHelper.Callback callback = new ViewDragHelper.Callback() {
 
         public boolean tryCaptureView(View view, int arg1) {
-            return true;
+            return view == itemView;
         }
 
         public int clampViewPositionHorizontal(View child, int left, int dx) {
@@ -88,6 +81,16 @@ public class SWSlipeLayout extends LinearLayout {
             } else {
                 itemView.offsetLeftAndRight(dx);
             }
+            if (itemView.getLeft() != 0) {
+                SWSlipeManager.getInstance().setSwSlipeLayout(SWSlipeLayout.this);
+            } else {
+                SWSlipeManager.getInstance().clear();
+            }
+            if (itemView.getLeft() == 0 && changeStatus != Status.Close) {
+                changeStatus = Status.Close;
+            } else if (itemView.getLeft() == -hiddenViewWidth && changeStatus != Status.Open) {
+                changeStatus = Status.Open;
+            }
             invalidate();
         }
 
@@ -103,22 +106,12 @@ public class SWSlipeLayout extends LinearLayout {
 
     };
 
-    public boolean isOpen() {
-        return isOpen;
-    }
-
     /**
      * slide close
      */
     public void close() {
-        isOpen = !isOpen;
-        changeStatus = status;
-        status = Status.Close;
         if (helper.smoothSlideViewTo(itemView, 0, 0)) {
             ViewCompat.postInvalidateOnAnimation(this);
-        }
-        if (listener != null && changeStatus == Status.Open) {
-            listener.onStatusChanged(this, status);
         }
     }
 
@@ -126,40 +119,69 @@ public class SWSlipeLayout extends LinearLayout {
      * slide open
      */
     public void open() {
-        isOpen = !isOpen;
-        changeStatus = status;
-        status = Status.Open;
+        SWSlipeManager.getInstance().setSwSlipeLayout(this);
         if (helper.smoothSlideViewTo(itemView, -hiddenViewWidth, 0)) {
             ViewCompat.postInvalidateOnAnimation(this);
-        }
-        if (listener != null && changeStatus == Status.Close) {
-            listener.onStatusChanged(this, status);
         }
     }
 
     public void computeScroll() {
         super.computeScroll();
         // start animation
-        if (slipe_enable) {
-            if (helper.continueSettling(true)) {
-                ViewCompat.postInvalidateOnAnimation(this);
-            }
+        if (helper.continueSettling(true)) {
+            ViewCompat.postInvalidateOnAnimation(this);
         }
     }
 
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        if (slipe_enable) {
-            return helper.shouldInterceptTouchEvent(event);
+        boolean value = helper.shouldInterceptTouchEvent(event);
+        //if you open is not the current item,close
+        if (!SWSlipeManager.getInstance().haveOpened(this)) {
+            SWSlipeManager.getInstance().close();
         }
-        return super.onInterceptTouchEvent(event);
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                downIX = event.getX();
+                downIY = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                moveX = event.getX();
+                moveY = event.getY();
+                if (Math.abs(moveX - downIX) > 1 || Math.abs(moveY - downIY) > 1) {
+                    value = true;
+                }
+                break;
+        }
+        return value;
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        if (slipe_enable) {
-            helper.processTouchEvent(event);
+        if (SWSlipeManager.getInstance().haveOpened(this)) {
+            getParent().requestDisallowInterceptTouchEvent(true);
+        } else if (SWSlipeManager.getInstance().haveOpened()) {
+            getParent().requestDisallowInterceptTouchEvent(true);
             return true;
         }
-        return super.onTouchEvent(event);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                downX = event.getX();
+                downY = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                float moveX = event.getX();
+                float moveY = event.getY();
+                float dx = Math.abs(moveX - downX);
+                float dy = Math.abs(moveY - downY);
+                if (dx > dy) {
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                }
+                downX = moveX;
+                downY = moveY;
+                break;
+        }
+        helper.processTouchEvent(event);
+        return true;
     }
 
     protected void onFinishInflate() {
