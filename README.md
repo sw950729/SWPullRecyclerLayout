@@ -42,4 +42,9 @@ public class NumAdapter extends SWRecyclerAdapter<String> {
 ```
 SWDiffCallBack
 ---------
-使用介绍请看：http://blog.csdn.net/sw950729/article/details/70052693
+使用介绍请看：http://blog.csdn.net/sw950729/article/details/70052693   
+
+
+SWSlipeLayout
+---------
+使用介绍请看：http://blog.csdn.net/sw950729/article/details/71404281
