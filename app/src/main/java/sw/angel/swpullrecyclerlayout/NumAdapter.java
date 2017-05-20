@@ -1,13 +1,11 @@
 package sw.angel.swpullrecyclerlayout;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.angel.adapter.SWRecyclerAdapter;
 import com.angel.adapter.SWViewHolder;
-import com.angel.layout.SWSlipeLayout;
 import com.angel.utils.SWSlipeManager;
 
 import java.util.List;
@@ -32,7 +30,7 @@ public class NumAdapter extends SWRecyclerAdapter<String> {
 
     public void bindData(final SWViewHolder holder, final int position, String item) {
         TextView text = holder.getTextView(R.id.text);
-        TextView text_top = holder.getTextView(R.id.text_top);
+//        TextView text_top = holder.getTextView(R.id.text_top);
         TextView text_delete = holder.getTextView(R.id.text_delete);
         text.setText(list.get(position) + "");
         text.setOnClickListener(new View.OnClickListener() {
@@ -50,12 +48,12 @@ public class NumAdapter extends SWRecyclerAdapter<String> {
                 SWSlipeManager.getInstance().close();
             }
         });
-        text_top.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                SWSlipeManager.getInstance().close();
-                setTop(holder.getLayoutPosition());
-            }
-        });
+//        text_top.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                SWSlipeManager.getInstance().close();
+//                setTop(holder.getLayoutPosition());
+//            }
+//        });
     }
 
 }
