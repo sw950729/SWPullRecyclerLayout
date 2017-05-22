@@ -1,11 +1,8 @@
 package sw.angel.swpullrecyclerlayout;
 
 import android.app.Activity;
-import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +12,6 @@ import com.angel.utils.SWSlipeManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends Activity implements OnTouchUpListener {
 
