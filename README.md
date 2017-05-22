@@ -11,12 +11,12 @@ android交流中心：232748032 <a target="_blank" href="http://shang.qq.com/wpa
 
 最新版本  
 -------      
-complie 'com.angel:SWPullRecyclerLayout:1.1.5'    加入了侧滑删除控件
-complie 'com.angel:SWPullRecyclerLayout:1.1.3'    修复了一些bug
-complie 'com.angel:SWPullRecyclerLayout:1.1.2'    修复了SWRecyclerAdapter的bug
-complie 'com.angel:SWPullRecyclerLayout:1.1.1'    修复了刷新加载回滚的bug
-complie 'com.angel:SWPullRecyclerLayout:1.1.0'    加入了SWRecyclerAdapter
-complie 'com.angel:SWPullRecyclerLayout:1.0.0'    初稿    
+complie 'com.angel:SWPullRecyclerLayout:1.1.5'    加入了侧滑删除控件    
+complie 'com.angel:SWPullRecyclerLayout:1.1.3'    修复了一些bug     
+complie 'com.angel:SWPullRecyclerLayout:1.1.2'    修复了SWRecyclerAdapter的bug     
+complie 'com.angel:SWPullRecyclerLayout:1.1.1'    修复了刷新加载回滚的bug     
+complie 'com.angel:SWPullRecyclerLayout:1.1.0'    加入了SWRecyclerAdapter    
+complie 'com.angel:SWPullRecyclerLayout:1.0.0'    初稿       
 
 SWRecyclerAdapter的使用介绍    
 -------  
