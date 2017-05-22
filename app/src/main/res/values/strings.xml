@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SWPullRecyclerLayout</string>
+    <string name="behavior">sw.coord.ImageBehavior</string>
 </resources>

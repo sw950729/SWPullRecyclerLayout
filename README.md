@@ -11,10 +11,14 @@ android交流中心：232748032 <a target="_blank" href="http://shang.qq.com/wpa
 
 最新版本  
 -------      
-complie 'com.angel:SWPullRecyclerLayout:1.1.5'    
+complie 'com.angel:SWPullRecyclerLayout:1.1.5'    加入了侧滑删除控件    
+complie 'com.angel:SWPullRecyclerLayout:1.1.3'    修复了一些bug     
+complie 'com.angel:SWPullRecyclerLayout:1.1.2'    修复了SWRecyclerAdapter的bug     
+complie 'com.angel:SWPullRecyclerLayout:1.1.1'    修复了刷新加载回滚的bug     
+complie 'com.angel:SWPullRecyclerLayout:1.1.0'    加入了SWRecyclerAdapter    
+complie 'com.angel:SWPullRecyclerLayout:1.0.0'    初稿       
 
-    
-SWRecyclerAdapter的使用介绍    
+SWRecyclerAdapter的使用介绍    
 -------  
 目前adpter我给注入了textview 、ImageView、button，后续我会更新一篇关于独一无二的万能适配器的文章 请关注http://blog.csdn.net/sw950729 的更新。
 ```
