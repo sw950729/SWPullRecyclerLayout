@@ -43,7 +43,7 @@ public class SWCoordinatorLayout extends CoordinatorLayout implements NestedScro
     @Override
     public void onNestedScrollAccepted(View child, View target, int nestedScrollAxes) {
         super.onNestedScrollAccepted(child, target, nestedScrollAxes);
-//        startNestedScroll(nestedScrollAxes);
+        startNestedScroll(nestedScrollAxes);
     }
 
     @Override
