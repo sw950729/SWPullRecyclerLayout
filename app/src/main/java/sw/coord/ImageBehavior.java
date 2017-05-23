@@ -5,12 +5,13 @@ import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 
 import sw.angel.swpullrecyclerlayout.R;
+import sw.interf.LoadListener;
 
 
 /**
@@ -18,6 +19,11 @@ import sw.angel.swpullrecyclerlayout.R;
  */
 
 public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView>{
+    private LoadListener listener;
+
+    public void setListener(LoadListener listener) {
+        this.listener = listener;
+    }
 
     private final static float FACTOR = 1.5f;
 
@@ -52,7 +58,6 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView>{
     @Override
     public void onNestedScroll(CoordinatorLayout coordinatorLayout, ImageView child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
-        Log.i("unconsumed",dxUnconsumed+":"+dyUnconsumed);
         if(child.getId() == R.id.top)
         {
             //up to down dyUnconsumed<0
@@ -81,6 +86,14 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView>{
         if(child.getTranslationY()!= 0) {
             if (child.getHeight() <= Math.abs(child.getTranslationY()*FACTOR)) {
                 ObjectAnimator rotate = getRotateAnimator(child);
+                if(child.getId() == R.id.top)
+                {
+                    if(listener != null)
+                        listener.onRefresh(this,child);
+                }else if(child.getId() == R.id.bottom){
+                    if(listener != null)
+                        listener.onLoading(this,child);
+                }
                 rotate.start();
             } else {
                 ObjectAnimator translate = getTranlateAnimator(child);
@@ -107,11 +120,46 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView>{
 
     //get rotate animator indeterminate
     public ObjectAnimator getRotateAnimator(View view){
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view,View.ROTATION,0,359);
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view,View.ROTATION,0,360);
         objectAnimator.setDuration(800);
         objectAnimator.setRepeatCount(-1);
         objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         view.setTag(objectAnimator);
         return objectAnimator;
     }
+
+    public void onComplete(View view){
+        try {
+            ObjectAnimator objectAnimator = (ObjectAnimator) view.getTag();
+            if (objectAnimator.isRunning()) {
+                objectAnimator.cancel();
+            }
+        }catch (Exception e)
+        {
+            view.clearAnimation();
+        }
+        view.setTranslationY(0f);
+    }
+
+    /**
+     * A utility function to get the {@link ImageBehavior} associated with the {@code view}.
+     *
+     * @param view The {@link View} with {@link ImageBehavior}.
+     * @return The {@link ImageBehavior} associated with the {@code view}.
+     */
+    @SuppressWarnings("unchecked")
+    public static ImageBehavior from(ImageView view) {
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (!(params instanceof CoordinatorLayout.LayoutParams)) {
+            throw new IllegalArgumentException("The view is not a child of CoordinatorLayout");
+        }
+        CoordinatorLayout.Behavior behavior = ((CoordinatorLayout.LayoutParams) params)
+                .getBehavior();
+        if (!(behavior instanceof ImageBehavior)) {
+            throw new IllegalArgumentException(
+                    "The view is not associated with BottomSheetBehavior");
+        }
+        return (ImageBehavior) behavior;
+    }
+
 }
