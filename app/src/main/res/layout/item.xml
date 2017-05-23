@@ -19,7 +19,7 @@
 			android:layout_height="50dp">
 
 		<TextView
-				android:id="@+id/text_delete"
+				android:id="@+id/text_top"
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:layout_weight="1"
@@ -29,7 +29,7 @@
 				android:textColor="@android:color/white"/>
 
 		<TextView
-				android:id="@+id/texts"
+				android:id="@+id/text_delete"
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:layout_weight="1"

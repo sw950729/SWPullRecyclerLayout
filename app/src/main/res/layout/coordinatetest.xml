@@ -13,7 +13,7 @@
         android:id="@+id/top"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center_horizontal|top"
         android:layout_marginTop="-56dp"
         android:src="@drawable/loading"
         app:layout_behavior="@string/behavior" />

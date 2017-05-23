@@ -6,7 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import sw.angel.swpullrecyclerlayout.NumAdapter;
 import sw.angel.swpullrecyclerlayout.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/5/22 0022.
@@ -18,7 +22,11 @@ public class CoordiateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.coordinatetest);
         RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recycler_test);
-        recyclerView.setAdapter(new RecyclerAdapter());
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 30; i++) {
+            list.add(i + 1 + "");
+        }
+        recyclerView.setAdapter(new NumAdapter(this, list));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }
