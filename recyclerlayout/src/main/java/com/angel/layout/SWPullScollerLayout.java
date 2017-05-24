@@ -9,6 +9,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
+import com.angel.interfaces.OnTouchUpListener;
 
 /**
  * Created by Angel on 2017/5/24.
@@ -20,6 +21,12 @@ public class SWPullScollerLayout extends LinearLayout implements NestedScrolling
     private LinearLayout headerLayout = null;
     private LinearLayout footerLayout = null;
     private SWScrollView swScrollView = null;
+    private OnTouchUpListener onTouchUpListener = null;
+    private boolean IsRefresh = true;
+    private boolean IsLoad = true;
+    private boolean isfling = false;
+    //move total
+    private int totalY = 0;
     private int headerHeight = 0;
     private int footerHeight = 0;
 
@@ -61,6 +68,14 @@ public class SWPullScollerLayout extends LinearLayout implements NestedScrolling
     }
 
     /**
+     * add contentview
+     */
+    public void addContentView(View contentView) {
+        this.swScrollView.removeAllViews();
+        this.swScrollView.addView(contentView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+    }
+
+    /**
      * add footerview
      */
     public void addFooterView(View footerView, int footerHeight) {
@@ -68,6 +83,14 @@ public class SWPullScollerLayout extends LinearLayout implements NestedScrolling
         this.footerLayout.removeAllViews();
         this.footerLayout.addView(footerView);
         this.footerLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, footerHeight));
+    }
+
+    public int getTotal() {
+        return -totalY / 2;
+    }
+
+    public void addOnTouchUpListener(OnTouchUpListener onTouchUpListener) {
+        this.onTouchUpListener = onTouchUpListener;
     }
 
     public void setScrollTo(int fromY, int toY) {
@@ -104,6 +127,39 @@ public class SWPullScollerLayout extends LinearLayout implements NestedScrolling
      * parent view intercept child view scroll
      */
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
+        if (totalY < 0 && swScrollView.isOrientation(0) || totalY > 0 && swScrollView.isOrientation(1)) {
+            isfling = true;
+        }
+        if (IsRefresh) {
+            if (dy < 0) {
+                if (swScrollView.isOrientation(1)) {
+                    totalY += dy;
+                    if ((totalY / 2) >= 0) {
+                        scrollTo(0, totalY / 2);
+                        consumed[1] = dy;
+                    } else {
+                        scrollTo(0, 0);
+                        consumed[1] = 0;
+                    }
+                }
+                return;
+            }
+        }
+        if (IsLoad) {
+            if (dy > 0) {
+                if (swScrollView.isOrientation(0)) {
+                    totalY += dy;
+                    if ((totalY / 2) <= 0) {
+                        scrollTo(0, totalY / 2);
+                        consumed[1] = dy;
+                    } else {
+                        scrollTo(0, 0);
+                        consumed[1] = 0;
+                    }
+                }
+                return;
+            }
+        }
     }
 
     /**
@@ -113,18 +169,40 @@ public class SWPullScollerLayout extends LinearLayout implements NestedScrolling
      * dyUnconsumed  more than 0,move up
      */
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+        if (dyUnconsumed != 0) {
+            totalY += dyUnconsumed;
+            scrollTo(0, totalY / 2);
+        }
     }
 
     public void onStopNestedScroll(View child) {
         helper.onStopNestedScroll(child);
+        if (onTouchUpListener != null) {
+            isfling = false;
+            if (this.getTotal() >= headerHeight) {
+                this.setScrollTo(this.getTotal(), headerHeight);
+                if (!this.isScrollRefresh()) {
+                    this.setIsScrollRefresh(true);
+                    onTouchUpListener.OnRefreshing();
+                }
+            } else if (-this.getTotal() >= footerHeight) {
+                this.setScrollTo(this.getTotal(), -footerHeight);
+                if (!this.isScrollLoad()) {
+                    this.setIsScrollLoad(true);
+                    onTouchUpListener.OnLoading();
+                }
+            } else {
+                this.setScrollTo(0, 0);
+            }
+        }
     }
 
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
-        return true;
+        return isfling;
     }
 
     public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-        return true;
+        return isfling;
     }
 
     public int getNestedScrollAxes() {
@@ -132,6 +210,20 @@ public class SWPullScollerLayout extends LinearLayout implements NestedScrolling
     }
 
     private void smoothScrollTo(float fromY, float toY) {
+        ValueAnimator animator = ValueAnimator.ofFloat(new float[]{fromY, toY});
+        if (fromY == toY) {
+            animator.setDuration(0);
+        } else {
+            animator.setDuration(300);
+        }
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int to = (int) (-((Float) animation.getAnimatedValue()).floatValue());
+                scrollTo(0, to);
+                totalY = to * 2;
+            }
+        });
+        animator.start();
     }
 
     public class SWScrollView extends NestedScrollView {
