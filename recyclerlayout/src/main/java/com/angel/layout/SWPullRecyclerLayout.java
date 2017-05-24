@@ -72,6 +72,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         myRecyclerView.setAdapter(adapter);
         myRecyclerView.setHasFixedSize(fixed);
     }
+
     /**
      * add headerview
      */
@@ -194,7 +195,6 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
 //                return;
             }
         }
-
     }
 
     //child handle scroll
