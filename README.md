@@ -59,4 +59,4 @@ SWDiffCallBack
 
 SWSlipeLayout
 ---------
-使用介绍请看：http://blog.csdn.net/sw950729/article/details/71404281
+使用介绍请看：http://blog.csdn.net/sw950729/article/details/71404281 
