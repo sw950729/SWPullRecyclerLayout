@@ -37,7 +37,15 @@ public class SWPullScollerLayout extends LinearLayout implements NestedScrolling
 
     private void initial() {
         helper = new NestedScrollingParentHelper(this);
-
+        headerLayout = new LinearLayout(context);
+        footerLayout = new LinearLayout(context);
+        swScrollView = new SWScrollView(context);
+        setOrientation(VERTICAL);
+        headerLayout.setOrientation(VERTICAL);
+        footerLayout.setOrientation(VERTICAL);
+        addView(headerLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        addView(swScrollView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        addView(footerLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 
     /**

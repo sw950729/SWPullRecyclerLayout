@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<declare-styleable name="SWSlipeLayout">
-		<attr name="slipe_enable" format="boolean"/>
-	</declare-styleable>
-</resources>
