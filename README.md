@@ -58,4 +58,23 @@ SWDiffCallBack
 
 SWSlipeLayout
 ---------
-使用介绍请看：http://blog.csdn.net/sw950729/article/details/71404281 
+使用介绍请看：http://blog.csdn.net/sw950729/article/details/71404281    
+
+
+SWPullScollerLayout
+---------
+此控件是SWPullRecyclerLayout的升华版，SWPullRecyclerLayout是基于列表的刷新，准确的说是针对recyclerlayout的刷新和加载。而SWPullScrollerLayout是针对scrollview的刷新，即内部控件是任意的。因为还在修改SWPullRecyclerLayout，在此，jcenter先不更新，关于SWPullScrollerLayout的使用方法和SWPullRecyclerLayout差不多，具体内容如下：
+```
+        header = LayoutInflater.from(this).inflate(R.layout.header, null);
+        footer = LayoutInflater.from(this).inflate(R.layout.footer, null);
+        content = LayoutInflater.from(this).inflate(R.layout.scrollercontent, null);
+        swPullScollerLayout.addHeaderView(header, 100);
+        swPullScollerLayout.addFooterView(footer, 100);
+        swPullScollerLayout.addContentView(content);
+        swPullScollerLayout.addOnTouchUpListener(this);
+```   
+如无法理解，可以下载demo看demo源码。    
+
+关于  
+---------    
+为了让更多的理解recyclerview以及nestedscrolling机制而开发的嵌套滑动机制的刷新和加载。 如感觉使用良好，麻烦右上角star一下，谢谢。 如果遇到一些问题，或者有更好的建议，欢迎在Issues提出你的建议。我会参考，然后综合各种情况进行考虑是否需要添加进去。
