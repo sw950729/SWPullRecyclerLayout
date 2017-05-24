@@ -72,7 +72,8 @@ SWPullScollerLayout
         swPullScollerLayout.addFooterView(footer, 100);
         swPullScollerLayout.addContentView(content);
         swPullScollerLayout.addOnTouchUpListener(this);
-```   
+```     
+
 如无法理解，可以下载demo看demo源码。    
 
 关于  
