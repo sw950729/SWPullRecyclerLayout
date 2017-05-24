@@ -1,4 +1,4 @@
-package sw.coord;
+package sw.angel.swpullrecyclerlayout;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +15,7 @@ import com.angel.adapter.SWViewHolder;
 
 import sw.angel.swpullrecyclerlayout.NumAdapter;
 import sw.angel.swpullrecyclerlayout.R;
+import sw.coord.ImageBehavior;
 import sw.interf.LoadListener;
 
 import java.util.ArrayList;
@@ -37,12 +38,12 @@ public class CoordiateActivity extends AppCompatActivity {
         recyclerView.setAdapter(new SWRecyclerAdapter<String>(this,list){
             @Override
             public int getItemLayoutId(int layoutID) {
-                return R.layout.item_test;
+                return R.layout.item;
             }
 
             @Override
             public void bindData(SWViewHolder holder, int position, String item) {
-                holder.getTextView(R.id.item_test_txt).setText(item);
+                holder.getTextView(R.id.text).setText(item);
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
