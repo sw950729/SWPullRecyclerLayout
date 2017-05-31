@@ -10,4 +10,6 @@ import sw.coord.ImageBehavior;
 public interface LoadListener {
     void onLoading(ImageBehavior behavior, View view);
     void onRefresh(ImageBehavior behavior,View view);
+    void onLoadingProcess(float value,ImageBehavior behavior);
+    void onRefreshProcess(float value,ImageBehavior behavior);
 }

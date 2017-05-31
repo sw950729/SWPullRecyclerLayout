@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -58,13 +59,17 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView>{
     @Override
     public void onNestedScroll(CoordinatorLayout coordinatorLayout, ImageView child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
+        float maxValue = child.getHeight()*FACTOR;
+        Log.i("dyConsumed",String.valueOf(dyConsumed));
         if(child.getId() == R.id.top)
         {
             //up to down dyUnconsumed<0
             if(dyUnconsumed < 0)
             {
-                float transY = Math.min(child.getTranslationY()-dyUnconsumed,child.getHeight()*FACTOR);
+                float transY = Math.min(child.getTranslationY()-dyUnconsumed,maxValue);
                 child.setTranslationY(transY);
+                if(listener != null)
+                    listener.onRefreshProcess(Math.abs(transY)/maxValue,this);
             }
             return ;
         }
@@ -76,6 +81,8 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView>{
             {
                 float transY = Math.max(child.getTranslationY()-dyUnconsumed,-child.getHeight()*FACTOR);
                 child.setTranslationY(transY);
+                if(listener != null)
+                    listener.onLoadingProcess(Math.abs(transY)/maxValue,this);
             }
 
         }
@@ -84,8 +91,9 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView>{
     @Override
     public void onStopNestedScroll(CoordinatorLayout coordinatorLayout, ImageView child, View target) {
         if(child.getTranslationY()!= 0) {
-            if (child.getHeight() <= Math.abs(child.getTranslationY()*FACTOR)) {
-                ObjectAnimator rotate = getRotateAnimator(child);
+            float current = Math.abs(child.getTranslationY());
+            float maxed = child.getHeight()*FACTOR;
+            if (maxed<= current) {
                 if(child.getId() == R.id.top)
                 {
                     if(listener != null)
@@ -94,7 +102,10 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView>{
                     if(listener != null)
                         listener.onLoading(this,child);
                 }
+                ObjectAnimator rotate = getRotateAnimator(child);
                 rotate.start();
+
+                //start loading animator
             } else {
                 ObjectAnimator translate = getTranlateAnimator(child);
                 translate.start();
@@ -105,7 +116,9 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView>{
 
     @Override
     public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, ImageView child, View target, int dx, int dy, int[] consumed) {
+        Log.i("dyPreConsumed",String.valueOf(consumed[1]));
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
+        Log.i("dyPreConsumed1",String.valueOf(consumed[1]));
     }
 
 
@@ -118,6 +131,9 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView>{
         return objectAnimator;
     }
 
+    private void reFresh() {
+
+    }
     //get rotate animator indeterminate
     public ObjectAnimator getRotateAnimator(View view){
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view,View.ROTATION,0,360);
