@@ -14,4 +14,6 @@
 			android:layout_height="wrap_content" android:onClick="onClick" android:textAllCaps="false"/>
 	<Button android:id="@+id/swcorrd" android:text="SWCorrd" android:layout_width="match_parent"
 			android:layout_height="wrap_content" android:onClick="onClick" android:textAllCaps="false"/>
+	<sw.widget.SWRefreshView android:id="@+id/refresh" android:layout_width="match_parent"
+							 android:layout_height="wrap_content"/>
 </LinearLayout>

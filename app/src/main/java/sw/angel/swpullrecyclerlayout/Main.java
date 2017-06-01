@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import sw.widget.SWRefreshView;
 
 /**
  * Created by Angel on 2017/5/24.
@@ -16,6 +17,7 @@ public class Main extends Activity implements View.OnClickListener {
     private Button swscrollerlayout;
     private Button coord;
     private Button swcorrd;
+    private SWRefreshView refresh;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +31,8 @@ public class Main extends Activity implements View.OnClickListener {
         swscrollerlayout = (Button) findViewById(R.id.swscrollerlayout);
         coord= (Button) findViewById(R.id.corrd);
         swcorrd= (Button) findViewById(R.id.swcorrd);
+        refresh= (SWRefreshView) findViewById(R.id.refresh);
+        refresh.startRefresh();
         swcorrd.setOnClickListener(this);
         coord.setOnClickListener(this);
         recyclerlayout.setOnClickListener(this);

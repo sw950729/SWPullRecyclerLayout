@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="refresh">
+		<attr name="refresh_line_width" format="integer"/>
+		<attr name="refresh_line_color" format="color"/>
+	</declare-styleable>
+</resources>
