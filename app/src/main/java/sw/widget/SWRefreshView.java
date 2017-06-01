@@ -1,7 +1,5 @@
 package sw.widget;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import sw.angel.swpullrecyclerlayout.R;
@@ -91,11 +88,11 @@ public class SWRefreshView extends View {
         } else if (mFraction <= 0.85) {             //再弹...
             mArrowVarLength = mArrowLength * 0.7f + mArrowLength * 0.5f / 0.15f * (mFraction - 0.7f);
             mArcVarLength = 14 - 20 / 0.15f * (mFraction - 0.7f);
-        } else if(mFraction<1.0){                                    //好吧...再弹 =。=
+        } else if (mFraction < 1.0) {                                    //好吧...再弹 =。=
             mArrowVarLength = mArrowLength * 1.2f - mArrowLength * 0.2f / 0.15f * (mFraction - 0.85f);
             mArcVarLength = -6 + 6 / 0.15f * (mFraction - 0.85f);
-        }else{
-            mFraction=0;
+        } else {
+            mFraction = 0;
             startRefresh();
         }
         canvas.save();
