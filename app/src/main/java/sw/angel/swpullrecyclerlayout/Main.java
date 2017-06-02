@@ -16,7 +16,6 @@ public class Main extends Activity implements View.OnClickListener {
     private Button coordinatorlayout;
     private Button swscrollerlayout;
     private Button coord;
-    private Button swcorrd;
     private SWRefreshView refresh;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +29,8 @@ public class Main extends Activity implements View.OnClickListener {
         coordinatorlayout = (Button) findViewById(R.id.coordinatorlayout);
         swscrollerlayout = (Button) findViewById(R.id.swscrollerlayout);
         coord= (Button) findViewById(R.id.corrd);
-        swcorrd= (Button) findViewById(R.id.swcorrd);
         refresh= (SWRefreshView) findViewById(R.id.refresh);
         refresh.startRefresh();
-        swcorrd.setOnClickListener(this);
         coord.setOnClickListener(this);
         recyclerlayout.setOnClickListener(this);
         coordinatorlayout.setOnClickListener(this);
@@ -53,9 +50,6 @@ public class Main extends Activity implements View.OnClickListener {
                 break;
             case R.id.corrd:
                 startActivity(new Intent(this, CoordiateActivity.class));
-                break;
-            case R.id.swcorrd:
-                startActivity(new Intent(this,CoordScrollActivity.class));
                 break;
         }
     }

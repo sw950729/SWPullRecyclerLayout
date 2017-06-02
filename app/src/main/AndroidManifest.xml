@@ -17,10 +17,8 @@
 		</activity>
 		<activity android:name=".MainActivity"/>
 		<activity android:name=".RecyclerActivity"/>
-		<!--<activity android:name=".CoordiateActivity"/>-->
 		<activity android:name=".ScorllActivity"/>
 		<activity android:name=".CoordiateActivity"/>
-		<activity android:name=".CoordScrollActivity"/>
 	</application>
 
 </manifest>
