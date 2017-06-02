@@ -22,7 +22,7 @@ public class CoordScrollActivity extends Activity implements OnTouchUpListener {
     private View header;
     private View footer;
     private View content;
-    private RecyclerView recyclerView;
+//    private RecyclerView recyclerView;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,10 +39,10 @@ public class CoordScrollActivity extends Activity implements OnTouchUpListener {
         header = LayoutInflater.from(this).inflate(R.layout.header, null);
         footer = LayoutInflater.from(this).inflate(R.layout.footer, null);
         content = LayoutInflater.from(this).inflate(R.layout.swscrolltest, null);
-        recyclerView = (RecyclerView) content.findViewById(R.id.recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new NumAdapter(this, list));
+//        recyclerView = (RecyclerView) content.findViewById(R.id.recycler);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.setHasFixedSize(true);
+//        recyclerView.setAdapter(new NumAdapter(this, list));
         scollerLayout.addHeaderView(header, 100);
         scollerLayout.addFooterView(footer, 100);
         scollerLayout.addContentView(content);

@@ -11,17 +11,19 @@ import android.view.View;
 
 /**
  * Created by Administrator on 2017/5/23 0023.
- *
  */
-public class SWCoordinatorLayout extends CoordinatorLayout implements NestedScrollingChild{
+public class SWCoordinatorLayout extends CoordinatorLayout implements NestedScrollingChild {
+
     private NestedScrollingChildHelper childHelper;
+    private float mTotalUnconsumed;
+    private final int[] mParentOffsetInWindow = new int[2];
 
     public SWCoordinatorLayout(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public SWCoordinatorLayout(Context context, AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public SWCoordinatorLayout(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -43,6 +45,7 @@ public class SWCoordinatorLayout extends CoordinatorLayout implements NestedScro
     @Override
     public void onNestedScrollAccepted(View child, View target, int nestedScrollAxes) {
         super.onNestedScrollAccepted(child, target, nestedScrollAxes);
+        mTotalUnconsumed = 0;
         startNestedScroll(nestedScrollAxes);
     }
 
@@ -53,19 +56,26 @@ public class SWCoordinatorLayout extends CoordinatorLayout implements NestedScro
 
     @Override
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-        boolean isConsumed = dispatchNestedPreScroll(dx,dy,consumed,null);
-        if(isConsumed)
-        {
-            dx=dx-consumed[0];
-            dy=dy-consumed[1];
+        if (dy > 0 && mTotalUnconsumed > 0) {
+            if (dy > mTotalUnconsumed) {
+                consumed[1] = dy - (int) mTotalUnconsumed;
+                mTotalUnconsumed = 0;
+            } else {
+                mTotalUnconsumed -= dy;
+                consumed[1] = dy;
+            }
+            dispatchNestedPreScroll(dx, dy, consumed, null);
         }
-        //should add or remove some data
         super.onNestedPreScroll(target, dx, dy, consumed);
     }
+
     @Override
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-        dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed,null);
-        super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
+        dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, mParentOffsetInWindow);
+        final int dy = dyUnconsumed + mParentOffsetInWindow[1];
+        if (dy < 0) {
+            mTotalUnconsumed += Math.abs(dy);
+        }
     }
 
     @Override
@@ -75,8 +85,9 @@ public class SWCoordinatorLayout extends CoordinatorLayout implements NestedScro
 
     @Override
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
-        return dispatchNestedFling(velocityX,velocityY,super.onNestedFling(target, velocityX, velocityY, consumed));
+        return dispatchNestedFling(velocityX, velocityY, super.onNestedFling(target, velocityX, velocityY, consumed));
     }
+
     @Override
     public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
         return childHelper.dispatchNestedFling(velocityX, velocityY, consumed);
@@ -86,11 +97,12 @@ public class SWCoordinatorLayout extends CoordinatorLayout implements NestedScro
     public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
         return childHelper.dispatchNestedPreFling(velocityX, velocityY);
     }
+
     @Override
     public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-        if(dispatchNestedPreFling(velocityX,velocityY)){
+        if (dispatchNestedPreFling(velocityX, velocityY)) {
             return true;
-        }else{
+        } else {
             return super.onNestedPreFling(target, velocityX, velocityY);
         }
     }
@@ -114,6 +126,9 @@ public class SWCoordinatorLayout extends CoordinatorLayout implements NestedScro
     @Override
     public void onStopNestedScroll(View target) {
         super.onStopNestedScroll(target);
+        if (mTotalUnconsumed > 0) {
+            mTotalUnconsumed = 0;
+        }
         stopNestedScroll();
     }
 
