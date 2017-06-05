@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import com.angel.interfaces.OnTouchUpListener;
+import com.angel.utils.SWSlipeManager;
 
 /**
  * Created by Angel on 2016/7/27.
@@ -95,6 +96,18 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         this.footerLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, footerHeight));
     }
 
+    public void closeRefresh() {
+        setIsScrollRefresh(false);
+        setScrollTo(getTotal(), 0);
+        SWSlipeManager.getInstance().close();
+    }
+
+    public void closeLoad() {
+        setIsScrollLoad(false);
+        setScrollTo(getTotal(), 0);
+        SWSlipeManager.getInstance().close();
+    }
+
     public void setScrollTo(int fromY, int toY) {
         smoothScrollTo((float) fromY, (float) toY);
     }
@@ -138,13 +151,14 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
 
     //parent
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-        return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
+        return isEnabled() && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
     }
 
     //parent
     public void onNestedScrollAccepted(View child, View target, int axes) {
         helper.onNestedScrollAccepted(child, target, axes);
-        startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
+        startNestedScroll(axes & ViewCompat.SCROLL_AXIS_VERTICAL);
+        totalY = 0;
     }
 
     //child dispatch pre scroll
@@ -168,14 +182,14 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
                     if ((totalY / 2) >= 0) {
                         scrollTo(0, totalY / 2);
                         consumed[1] = dy;
-                        dispatchNestedPreScroll(dx, 0, consumed, null);
+//                        dispatchNestedPreScroll(dx, 0, consumed, null);
                     } else {
                         scrollTo(0, 0);
                         consumed[1] = 0;
-                        dispatchNestedPreScroll(dx, dy, consumed, null);
+//                        dispatchNestedPreScroll(dx, dy, consumed, null);
                     }
                 }
-//                return;
+                return;
             }
         }
         if (IsLoad) {
@@ -185,14 +199,14 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
                     if ((totalY / 2) <= 0) {
                         scrollTo(0, totalY / 2);
                         consumed[1] = dy;
-                        dispatchNestedPreScroll(dx, 0, consumed, null);
+//                        dispatchNestedPreScroll(dx, 0, consumed, null);
                     } else {
                         scrollTo(0, 0);
                         consumed[1] = 0;
-                        dispatchNestedPreScroll(dx, dy, consumed, null);
+//                        dispatchNestedPreScroll(dx, dy, consumed, null);
                     }
                 }
-//                return;
+                return;
             }
         }
     }
@@ -210,11 +224,11 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
      * dyUnconsumed  more than 0,move up
      */
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+        dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, null);
         if (dyUnconsumed != 0) {
             totalY += dyUnconsumed;
             scrollTo(0, totalY / 2);
         }
-        dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, null);
     }
 
     //child
