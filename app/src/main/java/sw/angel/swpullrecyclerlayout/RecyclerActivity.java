@@ -44,15 +44,11 @@ public class RecyclerActivity extends Activity implements OnTouchUpListener{
 
     public void OnRefreshing() {
         Log.i("angel", "OnRefreshing: 正在刷新");
-//        recycler.setIsScrollRefresh(false);
-//        recycler.setScrollTo(recycler.getTotal(), 0);
-//        SWSlipeManager.getInstance().close();
+//        recycler.closeRefresh();
     }
 
     public void OnLoading() {
         Log.i("angel", "OnLoading: 正在加载");
-//        recycler.setIsScrollLoad(false);
-//        recycler.setScrollTo(recycler.getTotal(), 0);
-//        SWSlipeManager.getInstance().close();
+//        recycler.closeLoad();
     }
 }
