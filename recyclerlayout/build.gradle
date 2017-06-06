@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.2"
@@ -12,6 +13,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
+    lintOptions {
+        abortOnError false
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -22,10 +27,16 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    testCompile 'junit:junit:4.12'
     compile 'com.android.support:recyclerview-v7:24+'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:design:24+'
+    testCompile 'junit:junit:4.12'
+}
+publish {
+    userOrg = 'sw950729'//bintray.com用户名
+    groupId = 'com.angel'//jcenter上的路径
+    artifactId = 'SWPullRecyclerLayout'//项目名称
+    publishVersion = '1.1.5'//版本号
+    desc = 'Oh hi, this is a nice layout about refreshing and loading'//描述，不重要
+    website = 'https://github.com/sw950729/SWPullRecyclerLayout'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
 }

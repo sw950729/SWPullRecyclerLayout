@@ -2,6 +2,8 @@ package com.angel.layout;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.NestedScrollingChild;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.NestedScrollingParent;
@@ -11,7 +13,7 @@ import android.support.v7.widget.*;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewParent;
 import android.widget.LinearLayout;
 import com.angel.interfaces.OnTouchUpListener;
 import com.angel.utils.SWSlipeManager;
@@ -312,6 +314,38 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         super.setEnabled(enabled);
         if (!enabled) {
             closeRefresh();
+        }
+    }
+
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        //解决和CollapsingToolbarLayout冲突的问题
+        AppBarLayout appBarLayout = null;
+        ViewParent p = getParent();
+        while (p != null) {
+            if (p instanceof CoordinatorLayout) {
+                break;
+            }
+            p = p.getParent();
+        }
+        if (p instanceof CoordinatorLayout) {
+            CoordinatorLayout coordinatorLayout = (CoordinatorLayout) p;
+            final int childCount = coordinatorLayout.getChildCount();
+            for (int i = childCount - 1; i >= 0; i--) {
+                final View child = coordinatorLayout.getChildAt(i);
+                if (child instanceof AppBarLayout) {
+                    appBarLayout = (AppBarLayout) child;
+                    break;
+                }
+            }
+            if (appBarLayout != null) {
+                appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                    @Override
+                    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                        setEnabled(verticalOffset == 0);
+                    }
+                });
+            }
         }
     }
 
