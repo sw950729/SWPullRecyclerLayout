@@ -42,7 +42,6 @@ public class MainActivity extends Activity implements OnTouchUpListener, AppBarL
         NumAdapter adapter = new NumAdapter(this, list);
         recycler.setMyRecyclerView(new LinearLayoutManager(this), adapter);
         recycler.addOnTouchUpListener(this);
-        appBarLayout.addOnOffsetChangedListener(this);
     }
 
     public void OnRefreshing() {
