@@ -317,9 +317,11 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         }
     }
 
+    /**
+     * solve with CollapsingToolbarLayout conflict
+     */
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        //解决和CollapsingToolbarLayout冲突的问题
         AppBarLayout appBarLayout = null;
         ViewParent p = getParent();
         while (p != null) {
