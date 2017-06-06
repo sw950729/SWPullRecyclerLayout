@@ -15,7 +15,7 @@ import sw.widget.LoadingProcess;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity implements OnTouchUpListener, AppBarLayout.OnOffsetChangedListener {
+public class MainActivity extends Activity implements OnTouchUpListener {
 
     private SWPullRecyclerLayout recycler;
     private View header;
@@ -54,23 +54,5 @@ public class MainActivity extends Activity implements OnTouchUpListener, AppBarL
 //        recycler.closeLoad();
     }
 
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        if (verticalOffset == 0) {
-            recycler.setEnabled(true);
-        } else {
-            recycler.setEnabled(false);
-        }
-    }
 
-    protected void onResume() {
-        super.onResume();
-        appBarLayout.addOnOffsetChangedListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        appBarLayout.removeOnOffsetChangedListener(this);
-    }
 }
