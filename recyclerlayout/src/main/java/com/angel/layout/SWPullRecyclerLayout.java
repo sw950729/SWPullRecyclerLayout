@@ -308,6 +308,13 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         animator.start();
     }
 
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        if (!enabled) {
+            closeRefresh();
+        }
+    }
+
     private class MyRecyclerView extends RecyclerView {
         private StaggeredGridLayoutManager staggeredGridLayoutManager = null;
         private LinearLayoutManager linearLayoutManager = null;
