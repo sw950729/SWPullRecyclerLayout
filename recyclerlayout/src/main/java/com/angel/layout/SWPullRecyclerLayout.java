@@ -4,8 +4,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.view.NestedScrollingChild;
-import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.NestedScrollingParent;
 import android.support.v4.view.NestedScrollingParentHelper;
 import android.support.v4.view.ViewCompat;
@@ -21,11 +19,10 @@ import com.angel.utils.SWSlipeManager;
 /**
  * Created by Angel on 2016/7/27.
  */
-public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollingParent, NestedScrollingChild {
+public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollingParent {
 
     private Context context = null;
     private NestedScrollingParentHelper helper = null;
-    private NestedScrollingChildHelper childhelper = null;
     private boolean IsRefresh = true;
     private boolean IsLoad = true;
     //move total
@@ -51,8 +48,6 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     }
 
     private void initial() {
-        childhelper = new NestedScrollingChildHelper(this);
-        childhelper.setNestedScrollingEnabled(true);
         helper = new NestedScrollingParentHelper(this);
         headerLayout = new LinearLayout(context);
         myRecyclerView = new MyRecyclerView(context);
@@ -146,28 +141,15 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         this.onTouchUpListener = onTouchUpListener;
     }
 
-    //child start nested scroll
-    public boolean startNestedScroll(int axes) {
-        return childhelper.startNestedScroll(axes);
-    }
-
-    //parent
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
         return isEnabled() && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
     }
 
-    //parent
     public void onNestedScrollAccepted(View child, View target, int axes) {
         helper.onNestedScrollAccepted(child, target, axes);
         startNestedScroll(axes & ViewCompat.SCROLL_AXIS_VERTICAL);
         totalY = 0;
     }
-
-    //child dispatch pre scroll
-    public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
-        return childhelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
-    }
-
 
     /**
      * parent
@@ -184,11 +166,9 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
                     if ((totalY / 2) >= 0) {
                         scrollTo(0, totalY / 2);
                         consumed[1] = dy;
-//                        dispatchNestedPreScroll(dx, 0, consumed, null);
                     } else {
                         scrollTo(0, 0);
                         consumed[1] = 0;
-//                        dispatchNestedPreScroll(dx, dy, consumed, null);
                     }
                 }
                 return;
@@ -201,23 +181,15 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
                     if ((totalY / 2) <= 0) {
                         scrollTo(0, totalY / 2);
                         consumed[1] = dy;
-//                        dispatchNestedPreScroll(dx, 0, consumed, null);
                     } else {
                         scrollTo(0, 0);
                         consumed[1] = 0;
-//                        dispatchNestedPreScroll(dx, dy, consumed, null);
                     }
                 }
                 return;
             }
         }
     }
-
-    //child handle scroll
-    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
-        return childhelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
-    }
-
 
     /**
      * parent
@@ -233,12 +205,6 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         }
     }
 
-    //child
-    public void stopNestedScroll() {
-        childhelper.stopNestedScroll();
-    }
-
-    //parent
     public void onStopNestedScroll(View child) {
         helper.onStopNestedScroll(child);
         if (onTouchUpListener != null) {
@@ -259,26 +225,6 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
                 this.setScrollTo(0, 0);
             }
         }
-    }
-
-    public void setNestedScrollingEnabled(boolean enabled) {
-        childhelper.setNestedScrollingEnabled(enabled);
-    }
-
-    public boolean isNestedScrollingEnabled() {
-        return childhelper.isNestedScrollingEnabled();
-    }
-
-    public boolean hasNestedScrollingParent() {
-        return childhelper.hasNestedScrollingParent();
-    }
-
-    public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
-        return childhelper.dispatchNestedFling(velocityX, velocityY, consumed);
-    }
-
-    public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
-        return childhelper.dispatchNestedPreFling(velocityX, velocityY);
     }
 
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
