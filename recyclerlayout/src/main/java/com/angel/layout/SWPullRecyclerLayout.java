@@ -4,12 +4,11 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.view.NestedScrollingParent;
-import android.support.v4.view.NestedScrollingParentHelper;
-import android.support.v4.view.ViewCompat;
+import android.support.v4.view.*;
 import android.support.v7.widget.*;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.LinearLayout;
@@ -19,12 +18,14 @@ import com.angel.utils.SWSlipeManager;
 /**
  * Created by Angel on 2016/7/27.
  */
-public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollingParent {
+public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollingParent, NestedScrollingChild {
 
     private Context context = null;
     private NestedScrollingParentHelper helper = null;
+    private NestedScrollingChildHelper childHelper = null;
     private boolean IsRefresh = true;
     private boolean IsLoad = true;
+    protected final int[] mParentScrollConsumed = new int[2];
     //move total
     private int totalY = 0;
     private LinearLayout headerLayout = null;
@@ -49,10 +50,12 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
 
     private void initial() {
         helper = new NestedScrollingParentHelper(this);
+        childHelper = new NestedScrollingChildHelper(this);
         headerLayout = new LinearLayout(context);
         myRecyclerView = new MyRecyclerView(context);
         footerLayout = new LinearLayout(context);
         setOrientation(VERTICAL);
+        setNestedScrollingEnabled(true);
         headerLayout.setOrientation(VERTICAL);
         footerLayout.setOrientation(VERTICAL);
         addView(this.headerLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -141,14 +144,26 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         this.onTouchUpListener = onTouchUpListener;
     }
 
+    //child start nested scroll
+    public boolean startNestedScroll(int axes) {
+        return childHelper.startNestedScroll(axes);
+    }
+
+    //parent
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
         return isEnabled() && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
     }
 
+    //parent
     public void onNestedScrollAccepted(View child, View target, int axes) {
         helper.onNestedScrollAccepted(child, target, axes);
         startNestedScroll(axes & ViewCompat.SCROLL_AXIS_VERTICAL);
         totalY = 0;
+    }
+
+    //child dispatch pre scroll
+    public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
+        return childHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
     }
 
     /**
@@ -160,25 +175,31 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
             isfling = true;
         }
         if (IsRefresh) {
-            if (dy < 0) {
-                if (myRecyclerView.isOrientation(1)) {
+            if (dy > 0) {
+                if (myRecyclerView.isOrientation(0)) {
                     totalY += dy;
-                    if ((totalY / 2) >= 0) {
+                    if ((totalY / 2) <= 0) {
                         scrollTo(0, totalY / 2);
                         consumed[1] = dy;
                     } else {
                         scrollTo(0, 0);
                         consumed[1] = 0;
                     }
+                } else {
+                    int[] parentConsumed = mParentScrollConsumed;
+                    if (dispatchNestedPreScroll(dx - consumed[0], dy - consumed[1], parentConsumed, null)) {
+                        consumed[0] += parentConsumed[0];
+                        consumed[1] += parentConsumed[1];
+                    }
                 }
                 return;
             }
         }
         if (IsLoad) {
-            if (dy > 0) {
-                if (myRecyclerView.isOrientation(0)) {
+            if (dy < 0) {
+                if (myRecyclerView.isOrientation(1)) {
                     totalY += dy;
-                    if ((totalY / 2) <= 0) {
+                    if ((totalY / 2) >= 0) {
                         scrollTo(0, totalY / 2);
                         consumed[1] = dy;
                     } else {
@@ -198,24 +219,28 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
      * dyUnconsumed  more than 0,move up
      */
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-        dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, null);
         if (dyUnconsumed != 0) {
             totalY += dyUnconsumed;
             scrollTo(0, totalY / 2);
         }
     }
 
+    //child handle scroll
+    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
+        return childHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
+    }
+
     public void onStopNestedScroll(View child) {
         helper.onStopNestedScroll(child);
         if (onTouchUpListener != null) {
             isfling = false;
-            if (this.getTotal() >= headerHeight) {
+            if (this.getTotal() >= headerHeight && myRecyclerView.isFirstPosition()) {
                 this.setScrollTo(this.getTotal(), headerHeight);
                 if (!this.isScrollRefresh()) {
                     this.setIsScrollRefresh(true);
                     onTouchUpListener.OnRefreshing();
                 }
-            } else if (-this.getTotal() >= footerHeight) {
+            } else if (-this.getTotal() >= footerHeight && myRecyclerView.isLastPosition()) {
                 this.setScrollTo(this.getTotal(), -footerHeight);
                 if (!this.isScrollLoad()) {
                     this.setIsScrollLoad(true);
@@ -225,6 +250,37 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
                 this.setScrollTo(0, 0);
             }
         }
+        stopNestedScroll();
+    }
+
+    @Override
+    public void setNestedScrollingEnabled(boolean enabled) {
+        childHelper.setNestedScrollingEnabled(enabled);
+    }
+
+    @Override
+    public boolean isNestedScrollingEnabled() {
+        return childHelper.isNestedScrollingEnabled();
+    }
+
+    @Override
+    public void stopNestedScroll() {
+        childHelper.stopNestedScroll();
+    }
+
+    @Override
+    public boolean hasNestedScrollingParent() {
+        return childHelper.hasNestedScrollingParent();
+    }
+
+    @Override
+    public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
+        return childHelper.dispatchNestedFling(velocityX, velocityY, consumed);
+    }
+
+    @Override
+    public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
+        return childHelper.dispatchNestedPreFling(velocityX, velocityY);
     }
 
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
@@ -269,15 +325,15 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         AppBarLayout appBarLayout = null;
-        ViewParent p = getParent();
-        while (p != null) {
-            if (p instanceof CoordinatorLayout) {
+        ViewParent parent = getParent();
+        while (parent != null) {
+            if (parent instanceof CoordinatorLayout) {
                 break;
             }
-            p = p.getParent();
+            parent = parent.getParent();
         }
-        if (p instanceof CoordinatorLayout) {
-            CoordinatorLayout coordinatorLayout = (CoordinatorLayout) p;
+        if (parent instanceof CoordinatorLayout) {
+            CoordinatorLayout coordinatorLayout = (CoordinatorLayout) parent;
             final int childCount = coordinatorLayout.getChildCount();
             for (int i = childCount - 1; i >= 0; i--) {
                 final View child = coordinatorLayout.getChildAt(i);
@@ -326,6 +382,56 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
             if (!isVertical()) {
                 throw new NullPointerException("vertical!");
             }
+        }
+
+        public boolean isFirstPosition() {
+            LayoutManager layoutManager = getLayoutManager();
+            int firstVisibleItemPosition;
+            if (layoutManager instanceof GridLayoutManager) {
+                firstVisibleItemPosition = ((GridLayoutManager) layoutManager).findFirstVisibleItemPosition();
+            } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+                int[] into = new int[((StaggeredGridLayoutManager) layoutManager).getSpanCount()];
+                ((StaggeredGridLayoutManager) layoutManager).findFirstVisibleItemPositions(into);
+                firstVisibleItemPosition = findMix(into);
+            } else {
+                firstVisibleItemPosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+            }
+            return firstVisibleItemPosition == 0;
+        }
+
+        public boolean isLastPosition() {
+            LayoutManager layoutManager = getLayoutManager();
+            int lastVisibleItemPosition;
+            if (layoutManager instanceof GridLayoutManager) {
+                lastVisibleItemPosition = ((GridLayoutManager) layoutManager).findLastVisibleItemPosition();
+            } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+                int[] into = new int[((StaggeredGridLayoutManager) layoutManager).getSpanCount()];
+                ((StaggeredGridLayoutManager) layoutManager).findLastVisibleItemPositions(into);
+                lastVisibleItemPosition = findMax(into);
+            } else {
+                lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+            }
+            return lastVisibleItemPosition == layoutManager.getItemCount() - 1;
+        }
+
+        private int findMix(int[] firstPositions) {
+            int min = firstPositions[0];
+            for (int value : firstPositions) {
+                if (value < min) {
+                    min = value;
+                }
+            }
+            return min;
+        }
+
+        private int findMax(int[] lastPositions) {
+            int max = lastPositions[0];
+            for (int value : lastPositions) {
+                if (value > max) {
+                    max = value;
+                }
+            }
+            return max;
         }
 
         /**
