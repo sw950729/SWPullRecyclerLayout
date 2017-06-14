@@ -231,7 +231,6 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         if (isShow) {
             if (dy != 0) {
                 totalY += dy;
-
                 scrollTo(0, totalY / 2);
             }
         }
