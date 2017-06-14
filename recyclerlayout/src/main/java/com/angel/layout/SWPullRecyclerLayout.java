@@ -26,6 +26,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     private boolean isRefresh = true;
     private boolean isLoad = true;
     protected final int[] parentScrollConsumed = new int[2];
+    private final int[] parentOffsetInWindow = new int[2];
     private boolean isShow = true;
     //move total
     private int totalY = 0;
@@ -224,8 +225,11 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
      * dyUnconsumed  more than 0,move up
      */
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+        dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed,
+                parentOffsetInWindow);
+        final int dy = dyUnconsumed + parentOffsetInWindow[1];
         if (isShow) {
-            if (dyUnconsumed != 0) {
+            if (dy != 0) {
                 totalY += dyUnconsumed;
                 scrollTo(0, totalY / 2);
             }
