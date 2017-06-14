@@ -230,7 +230,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         final int dy = dyUnconsumed + parentOffsetInWindow[1];
         if (isShow) {
             if (dy != 0) {
-                totalY += dyUnconsumed;
+                totalY += dy;
                 scrollTo(0, totalY / 2);
             }
         }
