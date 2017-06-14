@@ -23,9 +23,10 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     private Context context = null;
     private NestedScrollingParentHelper helper = null;
     private NestedScrollingChildHelper childHelper = null;
-    private boolean IsRefresh = true;
-    private boolean IsLoad = true;
-    protected final int[] mParentScrollConsumed = new int[2];
+    private boolean isRefresh = true;
+    private boolean isLoad = true;
+    protected final int[] parentScrollConsumed = new int[2];
+    private boolean isShow = true;
     //move total
     private int totalY = 0;
     private LinearLayout headerLayout = null;
@@ -136,6 +137,10 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         return myRecyclerView.isScrollRefresh;
     }
 
+    public void setShowHeaderAndFooter(boolean isShow) {
+        this.isShow = isShow;
+    }
+
     public void setRecyclerViewScrollToPosition(int position) {
         myRecyclerView.scrollToPosition(position);
     }
@@ -174,7 +179,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         if (totalY < 0 && myRecyclerView.isOrientation(0) || totalY > 0 && myRecyclerView.isOrientation(1)) {
             isfling = true;
         }
-        if (IsRefresh) {
+        if (isRefresh) {
             if (dy > 0) {
                 if (myRecyclerView.isOrientation(0)) {
                     totalY += dy;
@@ -186,7 +191,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
                         consumed[1] = 0;
                     }
                 } else {
-                    int[] parentConsumed = mParentScrollConsumed;
+                    int[] parentConsumed = parentScrollConsumed;
                     if (dispatchNestedPreScroll(dx - consumed[0], dy - consumed[1], parentConsumed, null)) {
                         consumed[0] += parentConsumed[0];
                         consumed[1] += parentConsumed[1];
@@ -195,7 +200,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
                 return;
             }
         }
-        if (IsLoad) {
+        if (isLoad) {
             if (dy < 0) {
                 if (myRecyclerView.isOrientation(1)) {
                     totalY += dy;
@@ -219,9 +224,11 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
      * dyUnconsumed  more than 0,move up
      */
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-        if (dyUnconsumed != 0) {
-            totalY += dyUnconsumed;
-            scrollTo(0, totalY / 2);
+        if (isShow) {
+            if (dyUnconsumed != 0) {
+                totalY += dyUnconsumed;
+                scrollTo(0, totalY / 2);
+            }
         }
     }
 

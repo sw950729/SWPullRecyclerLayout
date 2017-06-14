@@ -39,6 +39,7 @@ public class RecyclerActivity extends Activity implements OnTouchUpListener{
         recycler.addFooterView(footer, 100);
         NumAdapter adapter = new NumAdapter(this, list);
         recycler.setMyRecyclerView(new LinearLayoutManager(this), adapter);
+//        recycler.setShowHeaderAndFooter(false);
         recycler.addOnTouchUpListener(this);
     }
 
