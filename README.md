@@ -22,7 +22,7 @@ android交流中心：232748032 <a target="_blank" href="http://shang.qq.com/wpa
         recycler.addFooterView(footer, 100);
         NumAdapter adapter = new NumAdapter(this, list);
         recycler.setMyRecyclerView(new LinearLayoutManager(this), adapter);
-//        recycler.setShowHeaderAndFooter(false);
+//      recycler.setShowHeaderAndFooter(false);
         recycler.addOnTouchUpListener(this);
 ```  
 setShowHeaderAndFooter是判断是否需要刷新和加载，默认为true。若为false，则和普通列表无区别。   
