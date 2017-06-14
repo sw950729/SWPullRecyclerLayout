@@ -14,9 +14,20 @@ android交流中心：232748032 <a target="_blank" href="http://shang.qq.com/wpa
 
 介绍
 -------      
-详情请看：http://blog.csdn.net/sw950729/article/details/60478901 后续更新会在此说明。
+详情请看：http://blog.csdn.net/sw950729/article/details/60478901   
+```  
+        header = LayoutInflater.from(this).inflate(R.layout.header, null);
+        footer = LayoutInflater.from(this).inflate(R.layout.footer, null);
+        recycler.addHeaderView(header, 100);
+        recycler.addFooterView(footer, 100);
+        NumAdapter adapter = new NumAdapter(this, list);
+        recycler.setMyRecyclerView(new LinearLayoutManager(this), adapter);
+//      recycler.setShowHeaderAndFooter(false);
+        recycler.addOnTouchUpListener(this);
+```  
+setShowHeaderAndFooter是判断是否需要刷新和加载，默认为true。若为false，则和普通列表无区别。   
 
-最新版本  
+最新版本  
 -------      
 complie 'com.angel:SWPullRecyclerLayout:1.1.5'    加入了侧滑删除控件    
 complie 'com.angel:SWPullRecyclerLayout:1.1.3'    修复了一些bug     
