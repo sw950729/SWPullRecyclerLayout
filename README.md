@@ -64,8 +64,26 @@ public class NumAdapter extends SWRecyclerAdapter<String> {
 ```
 SWDiffCallBack
 ---------
-使用介绍请看：http://blog.csdn.net/sw950729/article/details/70052693   
-
+使用介绍请看：http://blog.csdn.net/sw950729/article/details/70052693     
+```
+newlist = new ArrayList<>();
+for (int i = 1; i < list.size(); i++) {
+      newlist.add(list.get(i) + "");
+   }
+newlist.add(5,list.size() + j + "");
+j++;
+//普通刷新
+// list=newlist;
+// adapter.setList(newlist);
+// adapter.notifyDataSetChanged();
+//强大的局部刷新
+DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SWDiffCallBack(list, newlist), true);
+//利用DiffUtil.DiffResult对象的dispatchUpdatesTo（）方法，传入RecyclerView的Adapter
+//别忘了将新数据给Adapter
+list = newlist;
+adapter.setList(list);
+diffResult.dispatchUpdatesTo(adapter);    
+```             
 
 SWSlipeLayout
 ---------
