@@ -177,21 +177,22 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
                 || totalY > 0 && myRecyclerView.isOrientation(1) && myRecyclerView.isLastPosition()) {
             isfling = true;
         }
-        if(dispatchNestedPreScroll(dx , dy , consumed, null)){
-//            dx -= consumed[0];
-            dy -= consumed[1];
-            return ;
-        }
+
         if (isRefresh) {
             if (dy < 0 ) {
-                if (myRecyclerView.isOrientation(0) ) {
+                if(dispatchNestedPreScroll(dx , dy , consumed, null)){
+//            dx -= consumed[0];
+                    dy -= consumed[1];
+                    return ;
+                }else if (myRecyclerView.isOrientation(0) ) {
                     totalY += dy;
                     if ((totalY / 2) <= 0) {
                         scrollTo(0, totalY / 2);
                         consumed[1] += dy;
                     }
                 }
-            }if(dy >0 && totalY < 0)
+            }
+            if(dy >0 && totalY < 0)
             {
                 totalY += dy;
                 if(totalY > 0)
@@ -205,7 +206,11 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         }
         if (isLoad) {
             if (dy > 0) {
-                if (myRecyclerView.isOrientation(1) ) {
+                if(dispatchNestedPreScroll(dx , dy , consumed, null)){
+//            dx -= consumed[0];
+                    dy -= consumed[1];
+                    return ;
+                }else if (myRecyclerView.isOrientation(1) ) {
                     totalY += dy;
                     if ((totalY / 2) >= 0) {
                         scrollTo(0, totalY / 2);
