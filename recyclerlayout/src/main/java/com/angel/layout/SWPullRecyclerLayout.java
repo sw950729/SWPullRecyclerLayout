@@ -173,15 +173,15 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
      * parent view intercept child view scroll
      */
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
+        if (totalY < 0 && myRecyclerView.isOrientation(0) && myRecyclerView.isFirstPosition()
+                || totalY > 0 && myRecyclerView.isOrientation(1) && myRecyclerView.isLastPosition()) {
+            isfling = true;
+        }
         if(dispatchNestedPreScroll(dx , dy , consumed, null)){
 //            dx -= consumed[0];
             dy -= consumed[1];
             return ;
         }
-//        if (totalY < 0 && myRecyclerView.isOrientation(0) && myRecyclerView.isFirstPosition()
-//                || totalY > 0 && myRecyclerView.isOrientation(1) && myRecyclerView.isLastPosition()) {
-//            isfling = true;
-//        }
         if (isRefresh) {
             if (dy < 0 ) {
                 if (myRecyclerView.isOrientation(0) ) {
