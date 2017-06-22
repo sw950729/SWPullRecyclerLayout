@@ -300,11 +300,11 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     }
 
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
-        return dispatchNestedFling(velocityX, velocityY, consumed);
+        return isfling;
     }
 
     public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-        return dispatchNestedPreFling(velocityX, velocityY);
+        return isfling;
     }
 
     public int getNestedScrollAxes() {
