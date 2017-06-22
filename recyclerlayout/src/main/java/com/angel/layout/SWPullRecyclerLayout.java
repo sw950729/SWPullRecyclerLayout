@@ -192,9 +192,6 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
                 if (dispatchNestedPreScroll(dx - consumed[0], dy - consumed[1], parentConsumed, null)) {
                     consumed[0] += parentConsumed[0];
                     consumed[1] += parentConsumed[1];
-                    Log.i("----------", "onNestedPreScroll: " + dy);
-                    Log.i("---------", "onNestedPreScroll: " + parentConsumed[1]);
-                    Log.i("----------", "onNestedPreScroll: " + consumed[1]);
                 }
                 return;
             }
@@ -241,22 +238,21 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         helper.onStopNestedScroll(child);
         if (onTouchUpListener != null) {
             isfling = false;
-            if (this.getTotal() >= headerHeight && myRecyclerView.isFirstPosition()) {
-                Log.i("-------HEADER", "onStopNestedScroll: ");
+            if (getTotal() >= headerHeight && myRecyclerView.isFirstPosition()) {
+                Log.i("-------HEADER", "onStopNestedScroll: " + getTotal());
                 this.setScrollTo(this.getTotal(), headerHeight);
                 if (!this.isScrollRefresh()) {
                     this.setIsScrollRefresh(true);
                     onTouchUpListener.OnRefreshing();
                 }
-            } else if (-this.getTotal() >= footerHeight && myRecyclerView.isLastPosition()) {
-                Log.i("-------FOOTER", "onStopNestedScroll: ");
+            } else if (-getTotal() >= footerHeight && myRecyclerView.isLastPosition()) {
+                Log.i("-------FOOTER", "onStopNestedScroll: " + getTotal());
                 this.setScrollTo(this.getTotal(), -footerHeight);
                 if (!this.isScrollLoad()) {
                     this.setIsScrollLoad(true);
                     onTouchUpListener.OnLoading();
                 }
             } else {
-                Log.i("-------OTHER", "onStopNestedScroll: ");
                 Log.i("-----", "onStopNestedScroll: " + getTotal());
                 this.setScrollTo(getTotal(), 0);
             }
@@ -289,11 +285,11 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     }
 
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
-        return isfling;
+        return dispatchNestedFling(velocityX, velocityY, consumed);
     }
 
     public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-        return isfling;
+        return dispatchNestedPreFling(velocityX, velocityY);
     }
 
     public int getNestedScrollAxes() {
