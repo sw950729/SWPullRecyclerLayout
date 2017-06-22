@@ -15,7 +15,7 @@ import com.angel.utils.SWSlipeManager;
  * Created by Angel on 2016/7/27.
  */
 public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollingParent, NestedScrollingChild {
-
+        private final static long BOUNCE_TIME = 500;
     private Context context = null;
     private NestedScrollingParentHelper helper = null;
     private NestedScrollingChildHelper childHelper = null;
@@ -152,6 +152,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
 
     //parent
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
+        stopAnimator();
         return isEnabled() && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
     }
 
@@ -159,7 +160,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     public void onNestedScrollAccepted(View child, View target, int axes) {
         helper.onNestedScrollAccepted(child, target, axes);
         startNestedScroll(axes & ViewCompat.SCROLL_AXIS_VERTICAL);
-        totalY = 0;
+        //totalY = 0;
     }
 
     //child dispatch pre scroll
@@ -172,43 +173,57 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
      * parent view intercept child view scroll
      */
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-        if (totalY < 0 && myRecyclerView.isOrientation(0) && myRecyclerView.isFirstPosition()
-                || totalY > 0 && myRecyclerView.isOrientation(1) && myRecyclerView.isLastPosition()) {
-            isfling = true;
+        if(dispatchNestedPreScroll(dx , dy , consumed, null)){
+//            dx -= consumed[0];
+            dy -= consumed[1];
+            return ;
         }
+//        if (totalY < 0 && myRecyclerView.isOrientation(0) && myRecyclerView.isFirstPosition()
+//                || totalY > 0 && myRecyclerView.isOrientation(1) && myRecyclerView.isLastPosition()) {
+//            isfling = true;
+//        }
         if (isRefresh) {
-            if (dy > 0) {
-                if (myRecyclerView.isOrientation(0) && myRecyclerView.isFirstPosition()) {
+            if (dy < 0 ) {
+                if (myRecyclerView.isOrientation(0) ) {
                     totalY += dy;
                     if ((totalY / 2) <= 0) {
                         scrollTo(0, totalY / 2);
-                        consumed[1] = dy;
-                    } else {
-                        scrollTo(0, 0);
-                        consumed[1] = 0;
+                        consumed[1] += dy;
                     }
                 }
-                int[] parentConsumed = parentScrollConsumed;
-                if (dispatchNestedPreScroll(dx - consumed[0], dy - consumed[1], parentConsumed, null)) {
-                    consumed[0] += parentConsumed[0];
-                    consumed[1] += parentConsumed[1];
+            }if(dy >0 && totalY < 0)
+            {
+                totalY += dy;
+                if(totalY > 0)
+                    totalY = 0;
+                if ((totalY / 2) <= 0) {
+                    scrollTo(0, totalY / 2);
+                    consumed[1] += dy;
                 }
-                return;
+                return ;
             }
         }
         if (isLoad) {
-            if (dy < 0) {
-                if (myRecyclerView.isOrientation(1) && myRecyclerView.isLastPosition()) {
+            if (dy > 0) {
+                if (myRecyclerView.isOrientation(1) ) {
                     totalY += dy;
                     if ((totalY / 2) >= 0) {
                         scrollTo(0, totalY / 2);
-                        consumed[1] = dy;
-                    } else {
-                        scrollTo(0, 0);
-                        consumed[1] = 0;
+                        consumed[1] += dy;
                     }
+//                    else {
+//                        scrollTo(0, 0);
+//                        consumed[1] = 0;
+//                    }
                 }
-                return;
+            }if(dy < 0 && totalY > 0){
+                totalY += dy;
+                if(totalY < 0)
+                    totalY = 0;
+                if ((totalY / 2) >= 0) {
+                    scrollTo(0, totalY / 2);
+                    consumed[1] += dy;
+                }
             }
         }
     }
@@ -221,12 +236,12 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
      */
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         dispatchNestedScroll(0, dyConsumed, 0, dyUnconsumed, null);
-        if (isShow) {
-            if (dyUnconsumed != 0) {
-                totalY += dyUnconsumed;
-                scrollTo(0, totalY / 2);
-            }
-        }
+//        if (isShow) {
+//            if (dyUnconsumed != 0) {
+//                totalY += dyUnconsumed;
+//                scrollTo(0, totalY / 2);
+//            }
+//        }
     }
 
     //child handle scroll
@@ -296,21 +311,31 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         return helper.getNestedScrollAxes();
     }
 
+    private ValueAnimator animator;
     private void smoothScrollTo(float fromY, float toY) {
-        ValueAnimator animator = ValueAnimator.ofFloat(new float[]{fromY, toY});
+        Log.i("smoothScrollTo",fromY +" to "+toY);
+        animator = ValueAnimator.ofFloat(fromY, toY);
         if (fromY == toY) {
             animator.setDuration(0);
         } else {
-            animator.setDuration(300);
+            animator.setDuration(BOUNCE_TIME);
         }
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator animation) {
-                int to = (int) (-((Float) animation.getAnimatedValue()).floatValue());
+                int to = (int) (-(Float) animation.getAnimatedValue());
                 scrollTo(0, to);
                 totalY = to * 2;
             }
         });
         animator.start();
+    }
+
+    private void stopAnimator(){
+        if(animator != null)
+        {
+            animator.cancel();
+            animator = null;
+        }
     }
 
     public void setEnabled(boolean enabled) {
