@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import com.angel.interfaces.OnTouchUpListener;
 import com.angel.layout.SWPullRecyclerLayout;
-import sw.widget.LoadingProcess;
 
 import java.util.ArrayList;
 import java.util.List;
