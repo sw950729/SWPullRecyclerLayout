@@ -242,6 +242,8 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
                 }
             }
         }
+
+
     }
 
     /**
