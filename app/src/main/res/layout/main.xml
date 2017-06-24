@@ -10,8 +10,4 @@
 			android:layout_height="wrap_content" android:onClick="onClick" android:textAllCaps="false"/>
 	<Button android:id="@+id/swscrollerlayout" android:text="SWScrollerLayout" android:layout_width="match_parent"
 			android:layout_height="wrap_content" android:onClick="onClick" android:textAllCaps="false"/>
-	<Button android:id="@+id/corrd" android:text="Load" android:layout_width="match_parent"
-			android:layout_height="wrap_content" android:onClick="onClick" android:textAllCaps="false"/>
-	<Button android:id="@+id/testBar" android:layout_width="match_parent" android:layout_height="wrap_content"
-			android:text="TestBar"/>
 </LinearLayout>
