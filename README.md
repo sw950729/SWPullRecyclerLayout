@@ -30,7 +30,7 @@ setShowHeaderAndFooter是判断是否需要刷新和加载，默认为true。若
 最新版本  
 -------                     
 compile 'com.angel:SWPullRecyclerLayout:1.1.6'    完美的解决了与Coordinatorlayout冲突问题              
-compile 'com.angel:SWPullRecyclerLayout:1.1.5'    加入了侧滑删除控件                             
+compile 'com.angel:SWPullRecyclerLayout:1.1.5'    加入了侧滑删除控件                              
 compile 'com.angel:SWPullRecyclerLayout:1.1.3'    修复了一些bug                                     
 compile 'com.angel:SWPullRecyclerLayout:1.1.2'    修复了SWRecyclerAdapter的bug                                    
 compile 'com.angel:SWPullRecyclerLayout:1.1.1'    修复了刷新加载回滚的bug                               
@@ -38,7 +38,7 @@ compile 'com.angel:SWPullRecyclerLayout:1.1.0'    加入了SWRecyclerAdapter �
 compile 'com.angel:SWPullRecyclerLayout:1.0.0'    初稿                                 
                   
 注意事项                   
-------------                              
+-------                              
 SWPullRecyclerLayout已经处理了与Coordinatorlayout的问题。不过SWPullScrollerLayout并没有去处理此类问题，所以如若使用SWPullScrollerLayout，请讲它当作最外层的view使用。                   
 
 SWRecyclerAdapter的使用介绍    
