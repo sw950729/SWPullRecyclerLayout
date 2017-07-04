@@ -52,6 +52,8 @@ public class SWSlipeLayout extends LinearLayout {
     ViewDragHelper.Callback callback = new ViewDragHelper.Callback() {
 
         public boolean tryCaptureView(View view, int arg1) {
+            SWSlipeManager.getInstance().close();
+            SWSlipeManager.getInstance().clear();
             return view == itemView;
         }
 

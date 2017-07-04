@@ -3,13 +3,16 @@ package com.angel.layout;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.os.TraceCompat;
 import android.support.v4.view.*;
+import android.support.v4.widget.ScrollerCompat;
 import android.support.v7.widget.*;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
+import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 import com.angel.interfaces.OnTouchUpListener;
 import com.angel.utils.SWSlipeManager;
@@ -31,22 +34,19 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     private MyRecyclerView myRecyclerView = null;
     private LinearLayout footerLayout = null;
     private OnTouchUpListener onTouchUpListener = null;
-    private boolean isfling = false;
     private int headerHeight = 0;
     private int footerHeight = 0;
     private ValueAnimator animator;
+    private int[] parentScrollConsumed = new int[2];
+    private int[] parentOffsetInWindow = new int[2];
+    private AppBarLayout appBarLayout = null;
+    private STATE state = STATE.OPEN;
+    private boolean isCanRefresh = false;
+    private boolean isCanLoad = false;
 
-    /**
-     * used for AppbarLayout
-     */
-    private boolean collpasable = false;
-    public enum COLLPASESTATUE{
-        NULL,CLOSED,OPENED,BETWEEN
+    private enum STATE {
+        OPEN, BETWEEN, CLOSE
     }
-    private COLLPASESTATUE statue = COLLPASESTATUE.NULL;
-
-
-    private boolean handleScroll = false;
 
     public SWPullRecyclerLayout(Context context) {
         super(context);
@@ -187,63 +187,47 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
      * parent view intercept child view scroll
      */
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-        if (totalY < 0 && myRecyclerView.isOrientation(0) && myRecyclerView.isFirstPosition()
-                || totalY > 0 && myRecyclerView.isOrientation(1) && myRecyclerView.isLastPosition()) {
-            isfling = true;
-        }
-        //only dispatch to parent
-        dispatchNestedPreScroll(dx, dy, consumed, null);
-        if(!collpasable || statue == COLLPASESTATUE.OPENED)
-        {
-            handleScroll = true;
-            if (isRefresh && myRecyclerView.isFirstPosition()) {
-                if (dy < 0) {
-                        totalY += dy;
-                        if ((totalY / 2) <= 0) {
-                            scrollTo(0, totalY / 2);
-                            consumed[1] += dy;
-                        }
-                        return ;
-                }
-                if (dy > 0 && totalY < 0) {
+        if (isRefresh && state != STATE.CLOSE) {
+            if (dy > 0) {
+                if (myRecyclerView.isOrientation(0)) {
                     totalY += dy;
-                    if (totalY > 0)
-                        totalY = 0;
                     if ((totalY / 2) <= 0) {
                         scrollTo(0, totalY / 2);
-                        consumed[1] += dy;
+                        consumed[1] = dy;
+                    } else {
+                        scrollTo(0, 0);
+                        consumed[1] = 0;
+                    }
+                } else {
+                    final int[] parentConsumed = parentScrollConsumed;
+                    if (dispatchNestedPreScroll(dx - consumed[0], dy - consumed[1], parentConsumed, null)) {
+                        consumed[0] += parentConsumed[0];
+                        consumed[1] += parentConsumed[1];
+                    }
+                }
+                return;
+            }
+        }
+        if (isLoad && myRecyclerView.isLastPosition()) {
+            if (dy < 0) {
+                if (myRecyclerView.isOrientation(1)) {
+                    totalY += dy;
+                    if ((totalY / 2) >= 0) {
+                        scrollTo(0, totalY / 2);
+                        consumed[1] = dy;
+                    } else {
+                        scrollTo(0, 0);
+                    }
+                } else {
+                    final int[] parentConsumed = parentScrollConsumed;
+                    if (dispatchNestedPreScroll(dx - consumed[0], dy - consumed[1], parentConsumed, null)) {
+                        consumed[0] += parentConsumed[0];
+                        consumed[1] += parentConsumed[1];
                     }
                     return;
                 }
             }
         }
-
-        if(!collpasable || statue == COLLPASESTATUE.CLOSED)
-        {
-            handleScroll = true;
-            if (isLoad && myRecyclerView.isLastPosition()) {
-                if (dy > 0) {
-//                    if (myRecyclerView.isOrientation(1)) {
-                        totalY += dy;
-                        if ((totalY / 2) >= 0) {
-                            scrollTo(0, totalY / 2);
-                            consumed[1] += dy;
-                        }
-//                    }
-                }
-                if (dy < 0 && totalY > 0) {
-                    totalY += dy;
-                    if (totalY < 0)
-                        totalY = 0;
-                    if ((totalY / 2) >= 0) {
-                        scrollTo(0, totalY / 2);
-                        consumed[1] += dy;
-                    }
-                }
-            }
-        }
-
-
     }
 
     /**
@@ -253,7 +237,16 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
      * dyUnconsumed  more than 0,move up
      */
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-        dispatchNestedScroll(0, dyConsumed, 0, dyUnconsumed, null);
+        dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, null);
+        final int dy = dyUnconsumed + parentOffsetInWindow[1];
+        if (isShow) {
+            if (state != STATE.BETWEEN) {
+                if (dy != 0) {
+                    totalY += dyUnconsumed;
+                    scrollTo(0, totalY / 2);
+                }
+            }
+        }
     }
 
     //child handle scroll
@@ -261,29 +254,6 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         return childHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
     }
 
-    public void onStopNestedScroll(View child) {
-        helper.onStopNestedScroll(child);
-        if (onTouchUpListener != null) {
-            isfling=false;
-            if (getTotal() >= headerHeight) {
-                this.setScrollTo(this.getTotal(), headerHeight);
-                if (!this.isScrollRefresh()) {
-                    this.setIsScrollRefresh(true);
-                    onTouchUpListener.OnRefreshing();
-                }
-            } else if (-getTotal() >= footerHeight) {
-                this.setScrollTo(this.getTotal(), -footerHeight);
-                if (!this.isScrollLoad()) {
-                    this.setIsScrollLoad(true);
-                    onTouchUpListener.OnLoading();
-                }
-            }
-            else {
-                this.setScrollTo(this.getTotal(), 0);
-            }
-        }
-        stopNestedScroll();
-    }
 
     public void setNestedScrollingEnabled(boolean enabled) {
         childHelper.setNestedScrollingEnabled(enabled);
@@ -310,15 +280,47 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     }
 
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
-        return isfling;
+        if (velocityY < 0) {
+            isCanRefresh = true;
+            isCanLoad = false;
+        } else if (velocityY > 0) {
+            isCanLoad = true;
+            isCanRefresh = false;
+        } else {
+            isCanLoad = false;
+            isCanRefresh = false;
+        }
+        return dispatchNestedFling(velocityX, velocityY, consumed);
     }
 
     public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-        return isfling;
+        return dispatchNestedPreFling(velocityX, velocityY);
     }
 
     public int getNestedScrollAxes() {
         return helper.getNestedScrollAxes();
+    }
+
+    public void onStopNestedScroll(View child) {
+        helper.onStopNestedScroll(child);
+        if (onTouchUpListener != null) {
+            if (getTotal() >= headerHeight && myRecyclerView.isFirstPosition() && isCanRefresh) {
+                setScrollTo(getTotal(), headerHeight);
+                if (!isScrollRefresh()) {
+                    setIsScrollRefresh(true);
+                    onTouchUpListener.OnRefreshing();
+                }
+            } else if (-getTotal() >= footerHeight && myRecyclerView.isLastPosition() && isCanLoad) {
+                setScrollTo(getTotal(), -footerHeight);
+                if (!isScrollLoad()) {
+                    setIsScrollLoad(true);
+                    onTouchUpListener.OnLoading();
+                }
+            } else {
+                setScrollTo(0, 0);
+            }
+        }
+        stopNestedScroll();
     }
 
     private void smoothScrollTo(float fromY, float toY) {
@@ -338,20 +340,27 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         animator.start();
     }
 
-    @Override
+    private void stopAnimator() {
+        if (animator != null) {
+            animator.cancel();
+            animator = null;
+        }
+    }
+
+    /**
+     * solve with CollapsingToolbarLayout conflict
+     */
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        //解决和CollapsingToolbarLayout冲突的问题
-        AppBarLayout appBarLayout = null;
-        ViewParent p = getParent();
-        while (p != null) {
-            if (p instanceof CoordinatorLayout) {
+        ViewParent parent = getParent();
+        while (parent != null) {
+            if (parent instanceof CoordinatorLayout) {
                 break;
             }
-            p = p.getParent();
+            parent = parent.getParent();
         }
-        if (p != null) {
-            CoordinatorLayout coordinatorLayout = (CoordinatorLayout) p;
+        if (parent instanceof CoordinatorLayout) {
+            CoordinatorLayout coordinatorLayout = (CoordinatorLayout) parent;
             final int childCount = coordinatorLayout.getChildCount();
             for (int i = childCount - 1; i >= 0; i--) {
                 final View child = coordinatorLayout.getChildAt(i);
@@ -361,43 +370,20 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
                 }
             }
             if (appBarLayout != null) {
-                int count = appBarLayout.getChildCount();
-                for (int i =0;i<count;i++) {
-                    if(CollapsingToolbarLayout.class.isInstance(appBarLayout.getChildAt(i)))
-                        collpasable = true;
-                }
-                appBarLayout.addOnOffsetChangedListener(listener);
+                appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                    @Override
+                    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                        int range = appBarLayout.getTotalScrollRange();
+                        if (verticalOffset == 0) {
+                            state = STATE.OPEN;
+                        } else if (verticalOffset + range == 0) {
+                            state = STATE.CLOSE;
+                        } else {
+                            state = STATE.BETWEEN;
+                        }
+                    }
+                });
             }
-        }
-    }
-
-    private final AppBarLayout.OnOffsetChangedListener listener = new AppBarLayout.OnOffsetChangedListener() {
-        @Override
-        public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-            //setEnabled(verticalOffset == 0 && myRecyclerView.isOrientation(0));
-            int range = appBarLayout.getTotalScrollRange();
-            if(verticalOffset == 0){
-                statue = COLLPASESTATUE.OPENED;
-            }else if(verticalOffset+range == 0)
-            {
-                statue = COLLPASESTATUE.CLOSED;
-            }else if(!handleScroll){
-                statue = COLLPASESTATUE.BETWEEN;
-            }
-        }
-    };
-
-    private void stopAnimator() {
-        if (animator != null) {
-            animator.cancel();
-            animator = null;
-        }
-    }
-
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        if (!enabled) {
-            closeRefresh();
         }
     }
 
@@ -514,5 +500,14 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
             }
             return false;
         }
+
+        final Interpolator sQuinticInterpolator = new Interpolator() {
+            @Override
+            public float getInterpolation(float t) {
+                t -= 1.0f;
+                return t * t * t * t * t + 1.0f;
+            }
+        };
+
     }
 }
