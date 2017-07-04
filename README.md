@@ -37,9 +37,9 @@ compile 'com.angel:SWPullRecyclerLayout:1.1.1'    修复了刷新加载回滚�
 compile 'com.angel:SWPullRecyclerLayout:1.1.0'    加入了SWRecyclerAdapter      
 compile 'com.angel:SWPullRecyclerLayout:1.0.0'    初稿    
 
-注意事项     
-----------                
-SWPullRecyclerLayout已经处理了与Coordinatorlayout的问题。不过SWPullScrollerLayout并没有去处理此类问题，所以如若使用SWPullScrollerLayout，请讲它当作最外层的view使用。                   
+注意事项
+---------
+为了让更多的人理解recyclerview以及nestedscrolling机制而开发的嵌套滑动机制的刷新和加载。 如感觉使用良好，麻烦右上角star一下，谢谢。 如果遇到一些问题，或者有更好的建议，欢迎在Issues提出你的建议。我会参考，然后综合各种情况进行考虑是否需要添加进去。            
 
 SWRecyclerAdapter的使用介绍    
 -------  
