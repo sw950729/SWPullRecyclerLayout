@@ -97,7 +97,7 @@ SWSlipeLayout
 
 SWPullScollerLayout
 ---------
-此控件是SWPullRecyclerLayout的升华版，SWPullRecyclerLayout是基于列表的刷新，准确的说是针对recyclerlayout的刷新和加载。而SWPullScrollerLayout是针对scrollview的刷新，即内部控件是任意的。因为还在修改SWPullRecyclerLayout，在此，jcenter先不更新，关于SWPullScrollerLayout的使用方法和SWPullRecyclerLayout差不多，具体内容如下：
+此控件是SWPullRecyclerLayout的升华版，SWPullRecyclerLayout是基于列表的刷新，准确的说是针对recyclerlayout的刷新和加载。而SWPullScrollerLayout是针对scrollview的刷新，即内部控件是任意的。关于SWPullScrollerLayout的使用方法和SWPullRecyclerLayout差不多，具体内容如下：
 ```
 
         header = LayoutInflater.from(this).inflate(R.layout.header, null);
