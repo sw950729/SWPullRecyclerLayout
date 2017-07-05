@@ -26,6 +26,7 @@ public class SWSlipeLayout extends LinearLayout {
     private float moveY;
     private float downIX;
     private float downIY;
+    private int mPointerId = 0;
 
     /**
      * status
@@ -51,10 +52,12 @@ public class SWSlipeLayout extends LinearLayout {
 
     ViewDragHelper.Callback callback = new ViewDragHelper.Callback() {
 
-        public boolean tryCaptureView(View view, int arg1) {
-            SWSlipeManager.getInstance().close();
-            SWSlipeManager.getInstance().clear();
-            return view == itemView;
+        public boolean tryCaptureView(View view, int pointerId) {
+            if (mPointerId == pointerId) {
+                return view == itemView;
+            } else {
+                return false;
+            }
         }
 
         public int clampViewPositionHorizontal(View child, int left, int dx) {
