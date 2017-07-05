@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import com.angel.interfaces.OnTouchUpListener;
 import com.angel.layout.SWPullRecyclerLayout;
 
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * Created by Angel on 2017/5/24.
  */
-public class RecyclerActivity extends Activity implements OnTouchUpListener{
+public class RecyclerActivity extends Activity implements OnTouchUpListener {
     private SWPullRecyclerLayout recycler;
     private View header;
     private View footer;

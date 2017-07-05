@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import com.angel.interfaces.OnTouchUpListener;
 import com.angel.layout.SWPullRecyclerLayout;
 
@@ -18,7 +19,6 @@ public class MainActivity extends Activity implements OnTouchUpListener {
     private SWPullRecyclerLayout recycler;
     private View header;
     private View footer;
-    private AppBarLayout appBarLayout;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +28,6 @@ public class MainActivity extends Activity implements OnTouchUpListener {
 
     private void initial() {
         recycler = (SWPullRecyclerLayout) findViewById(R.id.recycler);
-        appBarLayout = (AppBarLayout) findViewById(R.id.layout_appbar);
         List<String> list = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
             list.add(i + 1 + "");

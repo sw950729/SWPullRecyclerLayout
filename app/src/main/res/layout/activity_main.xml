@@ -4,6 +4,8 @@
 												 android:id="@+id/missionfind_coordinate"
 												 android:layout_width="match_parent"
 												 android:layout_height="match_parent"
+												 android:fitsSystemWindows="true"
+												 android:clipToPadding="false"
 												 android:orientation="vertical">
 
 	<!-- android:fitsSystemWindow = "true" 表示整个布局展示是整个屏幕出去状态栏,标题栏和导航栏剩下的区域-->
