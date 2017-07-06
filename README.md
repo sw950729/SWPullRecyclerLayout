@@ -20,7 +20,8 @@ android交流中心：232748032 <a target="_blank" href="http://shang.qq.com/wpa
         header = LayoutInflater.from(this).inflate(R.layout.header, null);
         footer = LayoutInflater.from(this).inflate(R.layout.footer, null);
         recycler.addHeaderView(header, 100);
-        recycler.addFooterView(footer, 100);
+//      recycler.addFooterView(footer, 100);
+        recycler.addCircleProgressView(100);
         NumAdapter adapter = new NumAdapter(this, list);
         recycler.setMyRecyclerView(new LinearLayoutManager(this), adapter);
 //      recycler.setShowHeaderAndFooter(false);
@@ -30,8 +31,9 @@ setShowHeaderAndFooter是判断是否需要刷新和加载，默认为true。若
 
 最新版本  
 -------            
-compile 'com.angel:SWPullRecyclerLayout:1.1.7'    解决了多指侧滑显示的bug    
-compile 'com.angel:SWPullRecyclerLayout:1.1.6'    完美的解决了与Coordinatorlayout冲突问题     
+compile 'com.angel:SWPullRecyclerLayout:1.1.8'    添加了自定义的footer    
+compile 'com.angel:SWPullRecyclerLayout:1.1.7'    解决了多指侧滑显示的bug    
+compile 'com.angel:SWPullRecyclerLayout:1.1.6'    完美的解决了与Coordinatorlayout冲突问题     
 compile 'com.angel:SWPullRecyclerLayout:1.1.5'    加入了侧滑删除控件   
 compile 'com.angel:SWPullRecyclerLayout:1.1.3'    修复了一些bug        
 compile 'com.angel:SWPullRecyclerLayout:1.1.2'    修复了SWRecyclerAdapter的bug     
@@ -41,7 +43,7 @@ compile 'com.angel:SWPullRecyclerLayout:1.0.0'    初稿  
 
 注意事项
 ---------
-SWPullRecyclerLayout已经处理了与Coordinatorlayout的问题。不过SWPullScrollerLayout并没有去处理此类问题，所以如若使用SWPullScrollerLayout，请讲它当作最外层的view使用。            
+SWPullRecyclerLayout已经处理了与Coordinatorlayout的问题。不过SWPullScrollerLayout并没有去处理此类问题，所以如若使用SWPullScrollerLayout，请讲它当作最外层的view使用。 因为我做了Coordinatorlayout的处理，所以项目无需在次依赖design包和Recyclerview的包。
 
 SWRecyclerAdapter的使用介绍    
 -------  
