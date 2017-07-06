@@ -4,7 +4,7 @@
 
 效果图   
 --------  
-<img src='https://github.com/sw950729/SWPullRecyclerLayout/blob/master/gif/GIF.gif'  style="width:30%;height:30%;" />
+<img src='https://github.com/sw950729/SWPullRecyclerLayout/blob/master/gif/GIF.gif'  style="width:10%;height:10%;" />
 ![github](https://github.com/sw950729/SWPullRecyclerLayout/blob/master/gif/detele.gif)
 ![cithub](https://github.com/sw950729/SWPullRecyclerLayout/blob/master/gif/update.gif)
 ![cithub](https://github.com/sw950729/SWPullRecyclerLayout/blob/master/gif/circleprogress.gif)
