@@ -18,7 +18,6 @@
 		<activity android:name=".MainActivity"/>
 		<activity android:name=".RecyclerActivity"/>
 		<activity android:name=".ScorllActivity"/>
-		<activity android:name=".CoordiateActivity"/>
 	</application>
 
 </manifest>

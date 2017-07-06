@@ -17,6 +17,7 @@
 	<LinearLayout
 			android:id="@+id/linear"
 			android:layout_width="160dp"
+			android:visibility="gone"
 			android:layout_height="50dp">
 
 		<TextView

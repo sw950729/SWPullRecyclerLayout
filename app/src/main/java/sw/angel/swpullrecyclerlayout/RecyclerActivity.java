@@ -36,7 +36,7 @@ public class RecyclerActivity extends Activity implements OnTouchUpListener {
         header = LayoutInflater.from(this).inflate(R.layout.header, null);
         footer = LayoutInflater.from(this).inflate(R.layout.footer, null);
         recycler.addHeaderView(header, 100);
-        recycler.addFooterView(footer, 100);
+        recycler.addCircleProgressView(100);
         NumAdapter adapter = new NumAdapter(this, list);
         recycler.setMyRecyclerView(new LinearLayoutManager(this), adapter);
 //        recycler.setShowHeaderAndFooter(false);
