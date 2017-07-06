@@ -16,6 +16,7 @@ import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 import com.angel.interfaces.OnTouchUpListener;
 import com.angel.utils.SWSlipeManager;
+import com.angel.widget.SWCircleProgress;
 
 /**
  * Created by Angel on 2016/7/27.
@@ -33,6 +34,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     private LinearLayout headerLayout = null;
     private MyRecyclerView myRecyclerView = null;
     private LinearLayout footerLayout = null;
+    private SWCircleProgress swCircleProgress = null;
     private OnTouchUpListener onTouchUpListener = null;
     private int headerHeight = 0;
     private int footerHeight = 0;
@@ -108,6 +110,17 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         this.footerLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, footerHeight));
     }
 
+    /**
+     * add circleprogress footerview
+     */
+    public void addCircleProgressView(int footerHeight) {
+        swCircleProgress=new SWCircleProgress(context);
+        this.footerHeight = footerHeight;
+        this.footerLayout.removeAllViews();
+        this.footerLayout.addView(swCircleProgress);
+        this.footerLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, footerHeight));
+    }
+
     public void closeRefresh() {
         setIsScrollRefresh(false);
         setScrollTo(getTotal(), 0);
@@ -118,6 +131,9 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         setIsScrollLoad(false);
         setScrollTo(getTotal(), 0);
         SWSlipeManager.getInstance().close();
+        if(swCircleProgress!=null){
+            swCircleProgress.setLoad(false);
+        }
     }
 
     public void setScrollTo(int fromY, int toY) {
@@ -313,6 +329,9 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
             } else if (-getTotal() >= footerHeight && myRecyclerView.isLastPosition() && isCanLoad) {
                 setScrollTo(getTotal(), -footerHeight);
                 if (!isScrollLoad()) {
+                    if(swCircleProgress!=null){
+                        swCircleProgress.setLoad(true);
+                    }
                     setIsScrollLoad(true);
                     onTouchUpListener.OnLoading();
                 }
