@@ -1,5 +1,4 @@
 # SWPullRecyclerLayout   
-https://bintray.com/sw950729/maven/SWPullRecyclerLayout/1.1.8
 打造独一无二的刷新框架    
 =========    
 
