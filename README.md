@@ -1,9 +1,8 @@
 # SWPullRecyclerLayout   
 打造独一无二的刷新框架      
 [![](https://jitpack.io/v/sw950729/SWPullRecyclerLayout.svg)](https://jitpack.io/#sw950729/SWPullRecyclerLayout)
-
-=========    
-
+    
+--------------------   
 效果图   
 --------  
 ![github](https://github.com/sw950729/SWPullRecyclerLayout/blob/master/gif/GIF.gif)
