@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import com.angel.widget.SwipeRefreshView;
 
 /**
  * Created by Angel on 2017/5/24.
@@ -15,9 +16,12 @@ public class Main extends Activity implements View.OnClickListener {
     private Button coordinatorlayout;
     private Button swscrollerlayout;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        final SwipeRefreshView view = (SwipeRefreshView) findViewById(R.id.refresh_view);
+        view.setRefresh(true);
         initial();
     }
 

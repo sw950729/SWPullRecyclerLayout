@@ -21,6 +21,7 @@ public class RecyclerActivity extends Activity implements OnTouchUpListener {
     private View header;
     private View footer;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recyclerlayout);
@@ -35,7 +36,7 @@ public class RecyclerActivity extends Activity implements OnTouchUpListener {
         }
         header = LayoutInflater.from(this).inflate(R.layout.header, null);
         footer = LayoutInflater.from(this).inflate(R.layout.footer, null);
-        recycler.addHeaderView(header, 100);
+        recycler.addSwipeRefreshView(100);
         recycler.addCircleProgressView(100);
         NumAdapter adapter = new NumAdapter(this, list);
         recycler.setMyRecyclerView(new LinearLayoutManager(this), adapter);
@@ -43,12 +44,14 @@ public class RecyclerActivity extends Activity implements OnTouchUpListener {
         recycler.addOnTouchUpListener(this);
     }
 
-    public void OnRefreshing() {
+    @Override
+    public void onRefreshing() {
         Log.i("angel", "OnRefreshing: 正在刷新");
 //        recycler.closeRefresh();
     }
 
-    public void OnLoading() {
+    @Override
+    public void onLoading() {
         Log.i("angel", "OnLoading: 正在加载");
 //        recycler.closeLoad();
     }

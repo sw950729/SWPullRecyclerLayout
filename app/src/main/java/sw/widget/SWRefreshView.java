@@ -114,6 +114,7 @@ public class SWRefreshView extends View {
         valueAnimator.setDuration(mDuration);
         valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 mFraction = valueAnimator.getAnimatedFraction();
                 invalidate();

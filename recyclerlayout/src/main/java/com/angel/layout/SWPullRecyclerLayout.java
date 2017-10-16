@@ -10,6 +10,7 @@ import android.support.v4.widget.ScrollerCompat;
 import android.support.v7.widget.*;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewParent;
 import android.view.animation.Interpolator;
@@ -17,6 +18,8 @@ import android.widget.LinearLayout;
 import com.angel.interfaces.OnTouchUpListener;
 import com.angel.utils.SWSlipeManager;
 import com.angel.widget.SWCircleProgress;
+import com.angel.widget.SwipeRefreshView;
+import sw.angel.recyclerlayout.R;
 
 /**
  * Created by Angel on 2016/7/27.
@@ -35,6 +38,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     private MyRecyclerView myRecyclerView = null;
     private LinearLayout footerLayout = null;
     private SWCircleProgress swCircleProgress = null;
+    private SwipeRefreshView swipeRefreshView = null;
     private OnTouchUpListener onTouchUpListener = null;
     private int headerHeight = 0;
     private int footerHeight = 0;
@@ -111,10 +115,24 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     }
 
     /**
+     * add swiperefreshlayout header
+     */
+    public void addSwipeRefreshView(int headerHeight) {
+        swipeRefreshView = new SwipeRefreshView(context);
+        this.headerHeight = headerHeight;
+        this.headerLayout.removeAllViews();
+        this.headerLayout.addView(swipeRefreshView);
+        LayoutParams layoutParams = new LayoutParams(headerHeight, headerHeight);
+        layoutParams.topMargin = -headerHeight;
+        layoutParams.gravity= Gravity.CENTER;
+        this.headerLayout.setLayoutParams(layoutParams);
+    }
+
+    /**
      * add circleprogress footerview
      */
     public void addCircleProgressView(int footerHeight) {
-        swCircleProgress=new SWCircleProgress(context);
+        swCircleProgress = new SWCircleProgress(context);
         this.footerHeight = footerHeight;
         this.footerLayout.removeAllViews();
         this.footerLayout.addView(swCircleProgress);
@@ -131,7 +149,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         setIsScrollLoad(false);
         setScrollTo(getTotal(), 0);
         SWSlipeManager.getInstance().close();
-        if(swCircleProgress!=null){
+        if (swCircleProgress != null) {
             swCircleProgress.setLoad(false);
         }
     }
@@ -177,23 +195,27 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     }
 
     //child start nested scroll
+    @Override
     public boolean startNestedScroll(int axes) {
         return childHelper.startNestedScroll(axes);
     }
 
     //parent
+    @Override
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
         stopAnimator();
         return isEnabled() && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
     }
 
     //parent
+    @Override
     public void onNestedScrollAccepted(View child, View target, int axes) {
         helper.onNestedScrollAccepted(child, target, axes);
         startNestedScroll(axes & ViewCompat.SCROLL_AXIS_VERTICAL);
     }
 
     //child dispatch pre scroll
+    @Override
     public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
         return childHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
     }
@@ -202,6 +224,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
      * parent
      * parent view intercept child view scroll
      */
+    @Override
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
         if (isRefresh && state != STATE.CLOSE) {
             if (dy > 0) {
@@ -252,6 +275,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
      * dyUnconsumed less than 0,move down
      * dyUnconsumed  more than 0,move up
      */
+    @Override
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, null);
         final int dy = dyUnconsumed + parentOffsetInWindow[1];
@@ -266,35 +290,43 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     }
 
     //child handle scroll
+    @Override
     public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
         return childHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
     }
 
 
+    @Override
     public void setNestedScrollingEnabled(boolean enabled) {
         childHelper.setNestedScrollingEnabled(enabled);
     }
 
+    @Override
     public boolean isNestedScrollingEnabled() {
         return childHelper.isNestedScrollingEnabled();
     }
 
+    @Override
     public void stopNestedScroll() {
         childHelper.stopNestedScroll();
     }
 
+    @Override
     public boolean hasNestedScrollingParent() {
         return childHelper.hasNestedScrollingParent();
     }
 
+    @Override
     public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
         return childHelper.dispatchNestedFling(velocityX, velocityY, consumed);
     }
 
+    @Override
     public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
         return childHelper.dispatchNestedPreFling(velocityX, velocityY);
     }
 
+    @Override
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
         if (velocityY < 0) {
             isCanRefresh = true;
@@ -309,31 +341,37 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
         return dispatchNestedFling(velocityX, velocityY, consumed);
     }
 
+    @Override
     public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
         return dispatchNestedPreFling(velocityX, velocityY);
     }
 
+    @Override
     public int getNestedScrollAxes() {
         return helper.getNestedScrollAxes();
     }
 
+    @Override
     public void onStopNestedScroll(View child) {
         helper.onStopNestedScroll(child);
         if (onTouchUpListener != null) {
             if (getTotal() >= headerHeight && myRecyclerView.isFirstPosition() && isCanRefresh) {
                 setScrollTo(getTotal(), headerHeight);
                 if (!isScrollRefresh()) {
+                    if (swipeRefreshView != null) {
+                        swipeRefreshView.setRefresh(true);
+                    }
                     setIsScrollRefresh(true);
-                    onTouchUpListener.OnRefreshing();
+                    onTouchUpListener.onRefreshing();
                 }
             } else if (-getTotal() >= footerHeight && myRecyclerView.isLastPosition() && isCanLoad) {
                 setScrollTo(getTotal(), -footerHeight);
                 if (!isScrollLoad()) {
-                    if(swCircleProgress!=null){
+                    if (swCircleProgress != null) {
                         swCircleProgress.setLoad(true);
                     }
                     setIsScrollLoad(true);
-                    onTouchUpListener.OnLoading();
+                    onTouchUpListener.onLoading();
                 }
             } else {
                 setScrollTo(0, 0);
@@ -350,6 +388,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
             animator.setDuration(BOUNCE_TIME);
         }
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 int to = (int) (-(Float) animation.getAnimatedValue());
                 scrollTo(0, to);
@@ -369,6 +408,7 @@ public class SWPullRecyclerLayout extends LinearLayout implements NestedScrollin
     /**
      * solve with CollapsingToolbarLayout conflict
      */
+    @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         ViewParent parent = getParent();

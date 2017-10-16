@@ -18,6 +18,7 @@ public class ScorllActivity extends Activity implements OnTouchUpListener{
     private View footer;
     private View content;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scrollerlayout);
@@ -36,12 +37,12 @@ public class ScorllActivity extends Activity implements OnTouchUpListener{
     }
 
     @Override
-    public void OnRefreshing() {
+    public void onRefreshing() {
         Log.i("angel", "OnRefreshing: 正在刷新");
     }
 
     @Override
-    public void OnLoading() {
+    public void onLoading() {
         Log.i("angel", "OnLoading: 正在加载");
     }
 }

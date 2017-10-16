@@ -24,10 +24,12 @@ public class NumAdapter extends SWRecyclerAdapter<String> {
         this.list = list;
     }
 
+    @Override
     public int getItemLayoutId(int layoutID) {
         return R.layout.item;
     }
 
+    @Override
     public void bindData(final SWViewHolder holder, final int position, String item) {
         TextView text = holder.getTextView(R.id.text);
 //        TextView text_top = holder.getTextView(R.id.text_top);

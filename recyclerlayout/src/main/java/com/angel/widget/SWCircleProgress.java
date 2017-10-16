@@ -260,6 +260,7 @@ public class SWCircleProgress extends View {
         return currentSweepAngle;
     }
 
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         width = widthMeasureSpec - MeasureSpec.getMode(widthMeasureSpec);

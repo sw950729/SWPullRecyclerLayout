@@ -5,8 +5,8 @@ package com.angel.interfaces;
  */
 public interface OnTouchUpListener {
 
-    void OnRefreshing();
+    void onRefreshing();
 
-    void OnLoading();
+    void onLoading();
 
 }
